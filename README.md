@@ -65,32 +65,6 @@ pip install openai
 ```bash
 python app.py
 ```
-- The API will be available at **`http://127.0.0.1:5000`**.
-
----
-
-## 🛠️ Testing the API using Postman  
-
-1️⃣ **Open Postman** and create a new request.  
-2️⃣ **Set the request type to `POST`**.  
-3️⃣ **Enter the API URL**:  
-   ```
-   http://127.0.0.1:5000/chat
-   ```
-4️⃣ **Go to the `Body` tab** and select **`raw`**, then set the format to **`JSON`**.  
-5️⃣ **Enter this sample JSON request:**  
-   ```json
-   {
-       "message": "How do I improve my product sense?",
-       "mode": "mentor"
-   }
-   ```
-6️⃣ **Click `Send`**, and you should receive a JSON response like this:  
-   ```json
-   {
-       "response": "To improve your product sense, analyze successful products, understand user needs, and practice problem-solving through case studies."
-   }
-   ```
 
 ---
 
