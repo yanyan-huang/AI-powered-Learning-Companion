@@ -56,7 +56,12 @@ setx OPENAI_API_KEY "your-api-key-here"    # Windows (Command Prompt)
    pip install python-dotenv
    ```
 
-### 4️⃣ Run the Flask API  
+### 4️⃣ Install OpenAI Library 
+```bash
+pip install openai
+```  
+
+### 5️⃣ Run the Flask API  
 ```bash
 python app.py
 ```
