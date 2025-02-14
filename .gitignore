@@ -1,0 +1,11 @@
+# Ignore API key environment files
+.env
+*.env
+
+# Ignore system files
+.DS_Store
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
