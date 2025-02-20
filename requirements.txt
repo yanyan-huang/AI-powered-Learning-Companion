@@ -1,4 +1,8 @@
 python-telegram-bot
 openai
 moviepy
+imageio[ffmpeg]
+numpy
+pillow
 python-dotenv
+
