@@ -1,8 +1,7 @@
 python-telegram-bot
 openai
-moviepy
+moviepy==1.0.3  # Use a stable version
 imageio[ffmpeg]
 numpy
 pillow
 python-dotenv
-
