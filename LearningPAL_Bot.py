@@ -59,9 +59,22 @@ def chat_with_ai(user_input):
     response = client.chat.completions.create(
         model="gpt-4",
         messages=messages,
-        max_tokens=200
+        max_tokens=200 # Limit the response to 200 tokens
     )
     ai_reply = response.choices[0].message.content # Extract AI response
+
+    # Ensure response ends at a natural sentence boundary
+    words = ai_reply.split()
+    if len(words) > 200:
+        sentences = ai_reply.split(". ")  # Split response at sentence boundaries
+        truncated_response = ""
+        for sentence in sentences:
+            if len(truncated_response.split()) + len(sentence.split()) > 200:
+                break  # Stop adding sentences when reaching the limit
+            truncated_response += sentence + ". "  # Append the full sentence
+
+        ai_reply = truncated_response.strip()  # Trim any trailing spaces
+
     messages.append({"role": "assistant", "content": ai_reply}) # Store AI response for continuity
     return ai_reply
 
