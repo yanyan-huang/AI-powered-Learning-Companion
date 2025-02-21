@@ -147,5 +147,11 @@ application = Application.builder().token(TELEGRAM_API_TOKEN).build()
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_message))
 application.add_handler(MessageHandler(filters.VOICE, voice_message))
 
-# Start Bot using async polling
-application.run_polling()
+# Start the Bot using Webhook
+WEBHOOK_URL = "https://ai-powered-learning-companion-ryvl.onrender.com"
+application.run_webhook(
+    listen="0.0.0.0",
+    port=int(os.getenv("PORT", 8443)),
+    url_path=os.getenv("TELEGRAM_API_TOKEN"),
+    webhook_url=f"{WEBHOOK_URL}/{os.getenv('TELEGRAM_API_TOKEN')}"
+)
