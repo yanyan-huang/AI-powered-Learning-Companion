@@ -26,8 +26,6 @@ async def text_message(update: Update, context):
 
     # Add message to the processing queue
     await message_queue.put(("text", user_id, user_input))
-    
-    await update.message.reply_text("📩 Your message is being processed...")
 
 async def voice_message(update: Update, context):
     """Handles voice messages, downloads them, and queues them for transcription"""
@@ -38,8 +36,6 @@ async def voice_message(update: Update, context):
     await voice_file.download_to_drive(file_path)
 
     await message_queue.put(("voice", update.message.chat_id, file_path))
-    
-    await update.message.reply_text("🎙️ Voice received! Processing transcription...")
 
 # Set Up Message Handlers
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_message))
