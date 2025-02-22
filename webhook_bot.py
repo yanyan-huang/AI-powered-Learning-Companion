@@ -46,7 +46,7 @@ application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_mes
 application.add_handler(MessageHandler(filters.VOICE, voice_message))
 
 # Start the bot using Webhook
-WEBHOOK_URL = "https://your-deployed-url.onrender.com"
+WEBHOOK_URL = "https://ai-powered-learning-companion-ryvl.onrender.com"
 application.run_webhook(
     listen="0.0.0.0",
     port=int(os.getenv("PORT", 8443)),
