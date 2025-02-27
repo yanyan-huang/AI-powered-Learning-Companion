@@ -5,6 +5,7 @@ from telegram.constants import ParseMode
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from openai import OpenAI
 from moviepy.editor import AudioFileClip
+import re
 
 # ======================== #
 #  Load API Keys & Config  #
@@ -50,22 +51,44 @@ messages = [{"role": "system", "content": mode_prompts[current_mode]}]
 #  Chat Function with AI   #
 # ======================== #
 
+def truncate_sentence(text, max_words=150):
+    words = text.split()
+    if len(words) <= max_words:
+        return text  # No need to truncate
+
+    truncated = " ".join(words[:max_words])
+
+    # Find the last period, exclamation, or question mark within range
+    match = re.search(r"[.!?]\s", truncated[::-1])
+
+    if match:
+        cut_position = len(truncated) - match.start()
+        return truncated[:cut_position].strip()  # Stop at sentence boundary
+    else:
+        return truncated + "..."  # Append ellipsis if cut mid-sentence
+
 def chat_with_ai(user_input):
     """
     Processes user input and generates AI response within 150 words.
-    Maintains conversation history for context.
+    Ensures full responses while keeping responses natural.
     """
     messages.append({"role": "user", "content": user_input})
     
     response = client.chat.completions.create(
         model="gpt-4",
-        messages=messages,
-        max_tokens=200,  # Approx. 150 words
-        temperature=0.5,
-        stop=["\n\n"]  # Encourages ChatGPT to end naturally at a logical stopping point
+        messages=[
+            {"role": "system", "content": "Provide a concise but complete response in under 150 words."},
+            {"role": "user", "content": user_input}
+        ],
+        max_tokens=300,  # Approx. 150-200 words
+        temperature=0.7,  # Balanced conciseness and informativeness
+        stop=None  # Prevents early stopping
     )
 
     ai_reply = response.choices[0].message.content.strip()  # Extract AI response
+
+    # Ensure response does not exceed 150 words while keeping natural sentence flow
+    ai_reply = truncate_sentence(ai_reply, max_words=150)
 
     messages.append({"role": "assistant", "content": ai_reply})  # Store AI response for continuity
     return ai_reply
