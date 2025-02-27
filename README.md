@@ -20,7 +20,7 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 ## 🛠️ Tech Stack  
 - **Backend:** Python (Telegram Bot API + OpenAI API)  
 - **AI Integration:** OpenAI GPT-4 for intelligent responses  
-- **Voice Processing:** Managed by Telegram for handling voice messages  
+- **Voice Processing:** Telegram handles voice message retrieval; OpenAI Whisper transcribes speech to text
 - **Environment Management:** `.env` for API key security  
 - **Deployment:** Hosted on **Render.com** as a **Background Worker** for continuous availability  
 
