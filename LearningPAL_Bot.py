@@ -1,10 +1,10 @@
-from dotenv import load_dotenv
-import os
-from telegram import Update
-from telegram.constants import ParseMode
-from telegram.ext import Application, CommandHandler, MessageHandler, filters
-from openai import OpenAI
-from moviepy.editor import AudioFileClip
+from dotenv import load_dotenv  # Load environment variables from a .env file
+import os  # Access operating system environment variables
+from openai import OpenAI  # OpenAI API client for GPT-based interactions
+from telegram import Update  # Handles updates (messages, commands) from Telegram users
+from telegram.constants import ParseMode  # Constants for text formatting in Telegram messages
+from telegram.ext import Application, CommandHandler, MessageHandler, filters  # Telegram bot framework for handling commands and messages
+from moviepy.editor import AudioFileClip  # Handles audio file processing (converting voice messages)
 
 # ======================== #
 #  Load API Keys & Config  #
@@ -55,11 +55,10 @@ def chat_with_ai(user_input):
     Processes user input and generates AI response based on the selected mode.
     Maintains conversation history for context.
     """
-    messages.append({"role": "user", "content": user_input})
+    messages.append({"role": "user", "content": user_input}) # Store user input for continuity
     response = client.chat.completions.create(
         model="gpt-4",
-        messages=messages,
-        max_tokens=200
+        messages=messages
     )
     ai_reply = response.choices[0].message.content # Extract AI response
     messages.append({"role": "assistant", "content": ai_reply}) # Store AI response for continuity
@@ -69,6 +68,27 @@ def chat_with_ai(user_input):
 #  Telegram Bot - Text Handling   #
 # =============================== #
 
+async def change_mode(update: Update, context):
+    """
+    Handles /mode command to switch AI modes.
+    """
+    global current_mode
+
+    # Check if user provided a mode argument
+    if not context.args:
+        await update.message.reply_text("⚠️ Please specify a mode. Example: /mode tutor")
+        return
+
+    mode_choice = context.args[0].lower()  # Extract mode from command arguments
+
+    if mode_choice in mode_prompts:
+        current_mode = mode_choice
+        messages.clear()  # Reset conversation history when switching modes
+        messages.append({"role": "system", "content": mode_prompts[current_mode]})
+        await update.message.reply_text(f"🔄 Mode switched to *{current_mode.capitalize()}*", parse_mode=ParseMode.MARKDOWN)
+    else:
+        await update.message.reply_text("⚠️ Invalid mode. Choose from: mentor, tutor, interviewer.")
+
 async def text_message(update: Update, context):
     """
     Handles incoming text messages, processes AI responses, and supports mode switching.
@@ -76,17 +96,6 @@ async def text_message(update: Update, context):
     global current_mode
 
     user_input = update.message.text
-
-    # Handle mode switching
-    if user_input.lower().startswith("/mode"):
-        mode_choice = user_input.split(" ", 1)[-1].strip().lower()
-        if mode_choice in mode_prompts:
-            current_mode = mode_choice
-            messages.append({"role": "system", "content": mode_prompts[current_mode]})
-            await update.message.reply_text(f"🔄 Mode switched to *{current_mode.capitalize()}*", parse_mode=ParseMode.MARKDOWN)
-        else:
-            await update.message.reply_text("⚠️ Invalid mode. Choose from: mentor, tutor, interviewer.")
-        return
 
     # Get AI Response
     ai_response = chat_with_ai(user_input)
@@ -133,6 +142,9 @@ application = Application.builder().token(TELEGRAM_API_TOKEN).build()
 # Set Up Message Handlers
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_message))
 application.add_handler(MessageHandler(filters.VOICE, voice_message))
+
+# Add a CommandHandler for /mode
+application.add_handler(CommandHandler("mode", change_mode))
 
 # Start Bot using async polling
 application.run_polling()
