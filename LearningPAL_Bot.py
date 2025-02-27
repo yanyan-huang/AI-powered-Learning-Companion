@@ -76,10 +76,10 @@ def chat_with_ai(user_input):
     
     response = client.chat.completions.create(
         model="gpt-4",
-        messages=[
-            {"role": "system", "content": "Provide a concise but complete response in under 150 words."},
-            {"role": "user", "content": user_input}
-        ],
+messages=[
+    {"role": "system", "content": f"{mode_prompts[mode]} Provide a concise but complete response in under 150 words."},
+    *messages  # Retain full conversation history
+    ],
         max_tokens=300,  # Approx. 150-200 words
         temperature=0.7,  # Balanced conciseness and informativeness
         stop=None  # Prevents early stopping
