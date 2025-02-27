@@ -67,7 +67,7 @@ def truncate_sentence(text, max_words=150):
     else:
         return truncated + "..."  # Append ellipsis if cut mid-sentence
 
-def chat_with_ai(user_input):
+def chat_with_ai(user_input, mode=current_mode):
     """
     Processes user input and generates AI response within 150 words.
     Ensures full responses while keeping responses natural.
@@ -116,8 +116,11 @@ async def text_message(update: Update, context):
             await update.message.reply_text("⚠️ Invalid mode. Choose from: mentor, tutor, interviewer.")
         return
 
-    # Get AI Response
-    ai_response = chat_with_ai(user_input)
+    # Get user's selected mode (default to "tutor" if not set)
+    mode = user_data.get("mode", "tutor")
+
+    # Get AI Response, passing mode explicitly
+    ai_response = chat_with_ai(user_input, mode)
     await update.message.reply_text(f"🤖 *LearningPal:* {ai_response}", parse_mode=ParseMode.MARKDOWN)
 
 # =============================== #
