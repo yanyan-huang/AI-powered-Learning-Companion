@@ -12,21 +12,9 @@ from ai import chat_with_ai, switch_mode, client  # Import AI functions for chat
 # Initialize Telegram Bot application
 application = Application.builder().token(TELEGRAM_API_TOKEN).build()
 
-# =============================== #
-#  Command: Switch AI Learning Mode #
-# =============================== #
-
-async def change_mode(update: Update, context):
-    """
-    Handle /mode command to switch AI modes.
-    """
-    if not context.args:
-        await update.message.reply_text("⚠️ Please specify a mode. Example: /mode tutor")
-        return
-
-    mode_choice = context.args[0].lower()  # Extract mode argument
-    response_text = switch_mode(mode_choice)  # Call AI function to switch mode
-    await update.message.reply_text(response_text, parse_mode=ParseMode.MARKDOWN)
+# Track user states and selected modes per user
+user_states = {}  # Stores whether a user has been greeted
+user_modes = {}   # Stores selected mode per user (no default mode)
 
 # =============================== #
 #  Message Handling - Text Input  #
@@ -35,11 +23,53 @@ async def change_mode(update: Update, context):
 async def text_message(update: Update, context):
     """
     Handle incoming text messages and generate AI responses.
+    If no mode is selected, reminds the user to choose one.
     """
-    user_input = update.message.text  # Get user input
+    user_id = update.message.chat_id # Extract user ID for tracking
+    user_input = update.message.text.strip().lower() # Extract user input
 
-    ai_response = chat_with_ai(user_input)  # Get AI-generated response
-    await update.message.reply_text(f"🤖 *LearningPal:* {ai_response}", parse_mode=ParseMode.MARKDOWN)
+    # If no mode is set for this user, remind them
+    if user_modes.get(user_id) is None:
+        await update.message.reply_text(
+            "💡 *You haven't selected a mode yet!* 😊\n\n"
+            "Please choose one to get started:\n"
+            "- **📘 Type** `/mode mentor` *for career advice & learning paths.*\n"
+            "- **🎓 Type** `/mode tutor` *to learn PM concepts interactively.*\n"
+            "- **🎤 Type** `/mode interviewer` *to practice PM interviews.*\n\n"
+            "🔄 Let me know how you'd like to begin!",
+            parse_mode="Markdown"
+        )
+        return
+
+    # If mode is set, process AI response
+    ai_response = chat_with_ai(user_id, user_input, user_modes[user_id])
+    await update.message.reply_text(f"🤖 *LearningPal:* {ai_response}", parse_mode="Markdown")
+
+
+# =============================== #
+#  Command: Switch AI Learning Mode #
+# =============================== #
+
+async def change_mode(update: Update, context):
+    """
+    Handle /mode command and updates mode for the specific user.
+    """
+    user_id = update.message.chat_id
+
+    if not context.args:
+        await update.message.reply_text("⚠️ Please specify a mode: `/mode mentor`, `/mode tutor`, or `/mode interviewer`.")
+        return
+
+    mode_choice = context.args[0].lower()
+    valid_modes = ["mentor", "tutor", "interviewer"]
+
+    if mode_choice not in valid_modes:
+        await update.message.reply_text("⚠️ Invalid mode! Please choose `/mode mentor`, `/mode tutor`, or `/mode interviewer`.")
+        return
+
+    # Store the mode for the specific user
+    user_modes[user_id] = mode_choice
+    await update.message.reply_text(f"✅ *Mode switched to {mode_choice.capitalize()} Mode.* You can now ask related questions!", parse_mode=ParseMode.MARKDOWN)
 
 # =============================== #
 #  Message Handling - Voice Input #
@@ -49,6 +79,8 @@ async def voice_message(update: Update, context):
     """
     Handle voice messages: download, convert, transcribe, and process them with AI.
     """
+    user_id = update.message.chat_id
+
     await update.message.reply_text("🎙️ Processing voice message...")
 
     # Download the voice message file from Telegram
@@ -68,7 +100,7 @@ async def voice_message(update: Update, context):
 
     # Display transcribed text and process it with AI
     await update.message.reply_text(f"🎙️ *You:* _{transcript}_", parse_mode=ParseMode.MARKDOWN)
-    ai_response = chat_with_ai(transcript)
+    ai_response = chat_with_ai(user_id, transcript, user_modes[user_id])
     await update.message.reply_text(f"🤖 *LearningPal:* {ai_response}", parse_mode=ParseMode.MARKDOWN)
 
 # ======================= #

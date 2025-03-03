@@ -13,40 +13,51 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 #  AI Chat & Conversation Logic  #
 # ============================== #
 
-# Store conversation history to maintain context
-messages = [{"role": "system", "content": MODE_PROMPTS[DEFAULT_MODE]}]  # Default system prompt
-current_mode = DEFAULT_MODE  # Default AI mode
+# Store conversation history per user and mode
+# Example: messages[user_id][mode] → List of conversation messages
+messages = {}
 
-def chat_with_ai(user_input):
+def chat_with_ai(user_id, user_input, mode):
     """
     Process user input and generate an AI response based on the selected mode.
-    Maintains conversation history for context.
     """
-    messages.append({"role": "user", "content": user_input})  # Append user input
+    global messages
+
+    # Ensure a mode is selected before responding
+    if mode is None:
+        return "⚠️ Please select a mode first! Type `/mode mentor`, `/mode tutor`, or `/mode interviewer` to begin."
+
+    # Reset and start fresh if switching mode
+    if user_id not in messages:
+        messages[user_id] = {}
+    if mode not in messages[user_id]:  # Start fresh when switching modes
+        messages[user_id][mode] = [{"role": "system", "content": MODE_PROMPTS[mode]}]
+
+    messages[user_id][mode].append({"role": "user", "content": user_input})
 
     response = client.chat.completions.create(
         model="gpt-4",
-        messages=messages
-    )  # Generate AI response
+        messages=messages[user_id][mode]
+    )
 
-    ai_reply = response.choices[0].message.content  # Extract AI response
-    messages.append({"role": "assistant", "content": ai_reply})  # Store AI response
+    ai_reply = response.choices[0].message.content
+    messages[user_id][mode].append({"role": "assistant", "content": ai_reply})
 
-    return ai_reply  # Return AI-generated response
+    return ai_reply
 
 # =============================== #
 #  AI Mode Switching Function     #
 # =============================== #
 
-def switch_mode(mode):
+def switch_mode(user_id, mode):
     """
-    Switch AI mode and reset conversation history.
+    Switch AI mode for the user and reset conversation history.
     """
-    global current_mode
+    global messages
     if mode in MODE_PROMPTS:
-        current_mode = mode  # Update current mode
-        messages.clear()  # Clear conversation history
-        messages.append({"role": "system", "content": MODE_PROMPTS[current_mode]})  # Set new system prompt
-        return f"🔄 Mode switched to *{mode.capitalize()}*"
+        if user_id not in messages:
+            messages[user_id] = {}
+        messages[user_id][mode] = [{"role": "system", "content": MODE_PROMPTS[mode]}]  # Reset history
+        return f"🔄 Mode switched to *{mode.capitalize()}*. Previous conversation cleared."
     else:
-        return "⚠️ Invalid mode. Choose from: mentor, tutor, interviewer."
+        return "⚠️ Invalid mode. Choose `/mode mentor`, `/mode tutor`, or `/mode interviewer`."
