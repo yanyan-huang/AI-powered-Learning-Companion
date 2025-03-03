@@ -29,11 +29,12 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 ## 📂 **Folder Structure**
 ```
 /your_project_directory
-│─ telegram_bot.py   # Handles Telegram bot interactions
-│─ ai.py             # AI logic for processing messages & switching modes
-│─ config.py         # Stores API keys & environment variables
-│─ prompts.py        # Stores AI mode prompts
-│─ requirements.txt  # (Optional) Python dependencies
+│─ telegram_bot.py     # Main bot entry point (loads handlers) Telegram bot interactions
+│─ handlers.py         # Handles text messages, mode switching, and voice processing
+│─ ai.py               # AI logic for processing messages & switching modes
+│─ config.py           # Stores API keys & environment variables
+│─ prompts.py          # Stores AI mode prompts
+│─ requirements.txt  # (Optional) Dependencies
 │─ .env              # (Optional) Environment variables file
 ```
 
