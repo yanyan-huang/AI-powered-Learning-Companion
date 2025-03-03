@@ -28,7 +28,7 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 
 ## 📂 **Folder Structure**
 ```
-/your_project_directory
+/Project_directory
 │─ telegram_bot.py     # Main bot entry point (loads handlers) for Telegram bot interactions
 │─ handlers.py         # Handles text messages, mode switching, and voice processing
 │─ ai.py               # AI logic for processing messages & switching modes
