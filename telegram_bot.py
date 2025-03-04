@@ -1,9 +1,7 @@
 from config import TELEGRAM_API_TOKEN  # Load Telegram API token from config
-from telegram import Update  # Handles updates (messages, commands) from Telegram users
-from telegram.constants import ParseMode  # Constants for text formatting in Telegram messages
 from telegram.ext import Application, CommandHandler, MessageHandler, filters  # Telegram bot framework for handling commands and messages
 from handlers import text_message, change_mode, voice_message  # Import all handlers
-from handlers import greet_user, ensure_mode_selected, start  # Import new start function
+from handlers import start, help_command  # Import new start function
 
 # ======================== #
 #  Initialize Telegram Bot #
@@ -25,6 +23,9 @@ application.add_handler(CommandHandler("start", lambda update, context: start(up
 
 # Command Handler: Handles the "/mode" command to switch AI learning modes
 application.add_handler(CommandHandler("mode", lambda update, context: change_mode(update, context, user_modes)))
+
+# Command Handler: Handles the "/help" command to provide guidance on using the bot
+application.add_handler(CommandHandler("help", help_command))
 
 # Message Handler: Processes regular text messages (excluding commands) and generates AI responses
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, lambda update, context: text_message(update, context, user_modes)))

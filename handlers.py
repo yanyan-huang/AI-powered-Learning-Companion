@@ -30,9 +30,9 @@ async def ensure_mode_selected(update, user_modes):
     if user_modes.get(user_id) is None:
         await update.message.reply_text(
             "🎯 **Ready to dive in? Choose a mode to tailor your learning experience today!**\n\n"
-            "- **`/mode mentor`** to gain career insights, industry advice, and strategic learning paths.\n"
-            "- **`/mode tutor`** to engage in interactive Q&A to master core PM concepts.\n"
-            "- **`/mode interviewer`** to practice PM interviews and receive feedback.\n\n"
+            " **💡`/mode mentor`** for career advice & learning paths.\n"
+            " **📘`/mode tutor`** to learn PM concepts interactively.\n"
+            " **🎤`/mode interviewer`** to practice PM interviews and get feedback.\n\n"
             "Let me know how you'd like to begin!",
             parse_mode="Markdown"
         )
@@ -53,6 +53,26 @@ async def start(update, context, user_modes):
     await greet_user(update)  # Call the greeting function
     await ensure_mode_selected(update, user_modes)  # Ask user to select a mode
 
+
+# =============================== #
+#  Command Handling - Help         #
+# =============================== #
+async def help_command(update: Update, context):
+    """
+    Provides users with a quick overview of available commands and bot functionality.
+    """
+    await update.message.reply_text(
+        "**🤖 Need Help for your PM journey? Here's What You Can Do:**\n\n"
+        "To get started, you need to select a mode:\n"
+        "- **💡 Type** `/mode mentor` for career guidance and learning paths.\n"
+        "- **📘 Type** `/mode tutor` to learn PM concepts interactively.\n"
+        "- **🎤 Type** `/mode interviewer` for mock interviews with feedback.\n\n"
+        "**Other Commands:**\n"
+        "- **/start** – Restart the bot and reset your session.\n"
+        "- **/help** – Show this help message anytime.\n\n"
+        "Once you've selected a mode, just ask me anything, and I'll guide you!",
+        parse_mode="Markdown"
+    )
 
 # ================================== #
 #  Command Handling - Mode Switching #
