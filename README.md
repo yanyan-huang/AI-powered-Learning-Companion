@@ -102,7 +102,7 @@ The bot is live and can be accessed on Telegram:
 | `/mode mentor` | Switch to **Mentor Mode** (Career guidance & learning paths). |
 | `/mode tutor` | Switch to **Tutor Mode** (Q&A for PM concepts). |
 | `/mode interviewer` | Switch to **Mock Interview Mode** (PM interview simulations). |
-| `/mode coach` | Switch to **Coach Mode** (Guided case study learning). |
+| `/mode coach`（upcoming） | Switch to **Coach Mode** (Guided case study learning). |
 
 ---
 
