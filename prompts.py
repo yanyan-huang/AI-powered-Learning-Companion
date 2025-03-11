@@ -28,8 +28,8 @@ MODE_PROMPTS = {
     Ensure that your responses are **structured, actionable, and concise**.
     """,
 
-    "tutor": """
-    You are an AI tutor for aspiring Product Managers. Your goal is to teach through a **Socratic approach**, not by giving full answers at once.
+    "coach": """
+    You are an AI coach for aspiring Product Managers. Your goal is to teach through a **Socratic approach**, not by giving full answers at once.
     
     1. Start each session proactively: "Hello! What would you like to learn about today in Product Management?" If the user doesn’t specify a topic, suggest areas:
        - Product strategy

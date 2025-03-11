@@ -3,15 +3,15 @@ from telegram.constants import ParseMode # Constants for text formatting in Tele
 from telegram import Update # Handles updates (messages, commands) from Telegram users
 from moviepy.editor import AudioFileClip  # Handles audio file processing (converting voice messages)
 
-# =============================== #
-#  Greeting Function              #
-# =============================== #
+# ==================== #
+#  Greeting Function   #
+# ==================== #
 async def greet_user(update):
     """
     Sends a warm and engaging welcome message when the user first interacts with the bot.
     """
     await update.message.reply_text(
-        "👋 Hi! I'm your AI *Learning Pal*, your dedicated *mentor, tutor, and mock interviewer* on your Product Management journey!🚀\n\n"
+        "👋 Hi! I'm your AI *Learning Pal*, your dedicated *mentor, coach, and mock interviewer* on your Product Management journey!🚀\n\n"
         "Think of me as your *always-there learning companion*—whether you're exploring PM fundamentals, refining your skills, or prepping for high-stakes interviews, I’ve got your back. \n\n",
         parse_mode="Markdown"
     )
@@ -31,7 +31,7 @@ async def ensure_mode_selected(update, user_modes):
         await update.message.reply_text(
             "🎯 **Ready to dive in? Choose a mode to tailor your learning experience today!**\n\n"
             " **💡`/mode mentor`** for career advice & learning paths.\n"
-            " **📘`/mode tutor`** to learn PM concepts interactively.\n"
+            " **📘`/mode coach`** to learn PM concepts & case studies interactively.\n"
             " **🎤`/mode interviewer`** to practice PM interviews and get feedback.\n\n"
             "Let me know how you'd like to begin!",
             parse_mode="Markdown"
@@ -63,9 +63,8 @@ async def help_command(update: Update, context):
     """
     await update.message.reply_text(
         "**🤖 Need Help for your PM journey? Here's What You Can Do:**\n\n"
-        "To get started, you need to select a mode:\n"
         "- **💡 Type** `/mode mentor` for career guidance and learning paths.\n"
-        "- **📘 Type** `/mode tutor` to learn PM concepts interactively.\n"
+        "- **📘 Type** `/mode coach` to learn PM concepts & case studies interactively.\n"
         "- **🎤 Type** `/mode interviewer` for mock interviews with feedback.\n\n"
         "**Other Commands:**\n"
         "- **/start** – Restart the bot and reset your session.\n"
@@ -86,14 +85,14 @@ async def change_mode(update: Update, context, user_modes):
 
     #  validate user input for mode change 
     if not context.args:
-        await update.message.reply_text("Please choose `/mode mentor`, `/mode tutor`, or `/mode interviewer`.")
+        await update.message.reply_text("Please choose `/mode mentor`, `/mode coach`, or `/mode interviewer`.")
         return
 
     mode_choice = context.args[0].lower()
-    valid_modes = ["mentor", "tutor", "interviewer"]
+    valid_modes = ["mentor", "coach", "interviewer"]
 
     if mode_choice not in valid_modes:
-        await update.message.reply_text("Please choose `/mode mentor`, `/mode tutor`, or `/mode interviewer`.")
+        await update.message.reply_text("Please choose `/mode mentor`, `/mode coach`, or `/mode interviewer`.")
         return
 
     # store selected mode for the user
