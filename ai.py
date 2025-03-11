@@ -25,7 +25,7 @@ def chat_with_ai(user_id, user_input, mode):
 
     # Ensure a mode is selected before responding
     if mode is None:
-        return "⚠️ Please select a mode first! Type `/mode mentor`, `/mode tutor`, or `/mode interviewer` to begin."
+        return "⚠️ Please select a mode first! Type `/mode mentor`, `/mode coach`, or `/mode interviewer` to begin."
 
     # Reset and start fresh if switching mode
     if user_id not in messages:
@@ -60,4 +60,4 @@ def switch_mode(user_id, mode):
         messages[user_id][mode] = [{"role": "system", "content": MODE_PROMPTS[mode]}]  # Reset history
         return f"🔄 Mode switched to *{mode.capitalize()}*. Previous conversation cleared."
     else:
-        return "⚠️ Invalid mode. Choose `/mode mentor`, `/mode tutor`, or `/mode interviewer`."
+        return "⚠️ Invalid mode. Choose `/mode mentor`, `/mode coach`, or `/mode interviewer`."
