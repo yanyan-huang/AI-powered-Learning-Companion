@@ -25,6 +25,8 @@ This AI-powered learning companion provides mentorship, coaching, and mock inter
 - **python-dotenv:** Manages environment variables securely.
 
 ## 📂 Folder Structure
+```
+/Project_directory
 │-- app.py # Flask API Entry Point
 │-- cli.py # CLI Chatbot Entry Point
 │-- chatbot/ # Main Application Code
@@ -38,7 +40,7 @@ This AI-powered learning companion provides mentorship, coaching, and mock inter
 │-- README.md # Project Documentation
 │-- .env # Environment Variables (not tracked by Git)
 │-- wsgi.py # WSGI Entry Point for Production Deployment
-
+```
 ---
 
 ## 🔧 Installation & Setup
