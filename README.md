@@ -107,7 +107,8 @@ This runs your Flask API using Gunicorn on port 8080 with 4 worker processes.
 🚀 **Web Interface** – Simple UI for chat interaction.  
 🚀 **Voice Input** – Integrate voice processing (e.g., using OpenAI Whisper).  
 🚀 **User Data Tracking** – Store user interactions for personalized learning.  
-🚀 **Deployment** –Consider using Gunicorn with a reverse proxy (e.g., Nginx) or deploy on popular platforms like Render or AWS for automated scaling and reduced operational overhead.
+🚀 **Deployment** –Consider using Gunicorn with a reverse proxy (e.g., Nginx) 
+or deploy on popular platforms like Render or AWS for automated scaling and reduced operational overhead.
 
 
 ---
