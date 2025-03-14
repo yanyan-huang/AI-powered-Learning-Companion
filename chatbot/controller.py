@@ -59,3 +59,6 @@ class ChatbotAPIController:
     def run(self):
         """Start the Flask API server."""
         self.app.run(debug=True)
+
+# Expose the Flask app for WSGI servers like Gunicorn
+app = ChatbotAPIController().app
