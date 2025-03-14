@@ -100,6 +100,7 @@ class ChatbotController:
         This function ensures that the chatbot can be accessed by external clients.
         """
         self.app.run(debug=True)
+        # self.app.run(host="0.0.0.0", port=8080, debug=True)  # Change port from 5000 to 8080 for debugging
 
 # ========================= #
 #  View - CLI Interaction  #
@@ -135,7 +136,7 @@ class ChatbotView:
                 print("⚠️ Invalid mode selected. Please choose 1, 2, or 3.")
         
         print(f"🔹 Mode selected: {mode.capitalize()} mode")
-        print("Type 'quit' to exit the conversation.\n")
+        print("\n💬 Type your message or 'quit' to exit.\n")
         
         # Main loop for user interaction
         while True:
