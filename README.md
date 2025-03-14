@@ -1,33 +1,41 @@
 # AI-Powered Learning Companion (for Product Management) 🎓 🚀
 
-## 📌 Overview  
-This **AI-powered learning companion** provides **mentorship, tutoring, and mock interview coaching** for **aspiring and transitioning Product Managers**. It leverages AI to offer **structured learning paths, real-time feedback, and interactive interview practice**.
+## 📌 Overview
+This AI-powered learning companion provides mentorship, coaching, and mock interview simulations for aspiring and transitioning Product Managers. It leverages OpenAI's GPT-4 to offer structured learning paths, real-time feedback, and interactive practice sessions. The application is built using a modular **Model-View-Controller (MVC)** architecture and supports both a RESTful API and a command-line interface (CLI).
 
-## 🎯 MVP Focus: Backend Development  
-✅ **Mentor Mode** – AI recommends structured learning paths, courses, books, and career advice.  
-✅ **Tutor Mode** – AI provides Q&A assistance for PM concepts with real-world examples.  
-✅ **Mock Interview Mode** – AI conducts simulated PM interviews and gives structured feedback.  
-✅ **Flask API** – A backend service to process user queries via API requests.
+## 🎯 MVP Focus
+- **Mentor Mode** – AI recommends structured learning paths, courses, books, and career advice.
+- **Coach Mode** – AI provides Q&A assistance for PM concepts with real-world examples.
+- **Mock Interview Mode** – AI conducts simulated PM interviews and provides structured feedback.
+- **Flask API** – Exposes a RESTful API for integration with future web or mobile interfaces.
+- **CLI Interface** – Allows direct interaction with the backend for testing and debugging.
 
-## 🚀 Future Exploration  
-🔜 **Simple Web UI** – Users interact with AI via a web-based text interface.  
-🔜 **Voice Input** – Allow users to ask questions using Web Speech API.  
+## 🚀 Future Enhancements
+- **Web UI:** Extend interaction via a web-based chat interface.
+- **Advanced Voice Input:** Enhance transcription accuracy using tools like OpenAI Whisper.
+- **User Data Tracking:** Store and analyze user interactions for personalized learning.
+- **Deployment:** Host the API on cloud platforms using a production-ready WSGI server.
+
+## 🛠️ Tech Stack
+**Backend: Python (Flask API & CLI)**  
+- **Flask API:** Serves as the primary interface for external clients by exposing RESTful endpoints.
+- **CLI:** A command-line interface built on the same backend logic. Although a CLI is an interface, it is considered part of the backend because it directly interacts with the core business logic and is used for development, testing, and debugging.
+- **OpenAI GPT-4:** Provides intelligent responses.
+- **Gunicorn:** A production-ready WSGI server to deploy the Flask API.
+- **python-dotenv:** Manages environment variables securely.
+
+## 📂 Folder Structure
+
 
 ---
 
-## 🛠️ Tech Stack  
-- **Backend**: Python (Flask) + OpenAI API  
-- **Environment Management**: `.env` for API key security  
-- **API Interaction**: JSON-based Flask API (can be connected to future UI)  
+## 🔧 Installation & Setup
 
----
-
-## 🔧 Installation & Setup  
-
-### 1️⃣ Clone the Repository  
+### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/yanyan-huang/AI-powered-Learning-Companion.git
 cd AI-powered-Learning-Companion
+
 ```
 
 ### 2️⃣ Create a Virtual Environment & Install Dependencies  
@@ -61,18 +69,31 @@ setx OPENAI_API_KEY "your-api-key-here"    # Windows (Command Prompt)
 pip install openai
 ```  
 
-### 5️⃣ Run the Flask API  
+### 5️⃣ Run the the Application
+For API Mode (Product)
+Using Flask's Development Server (for local testing):
 ```bash
 python app.py
 ```
+Using Gunicorn (Recommended for Production):
+```bash
+gunicorn -w 4 -b 0.0.0.0:8080 wsgi:app
+```
 
+For CLI Mode (Development)
+```bash
+python cli.py
+```
+
+```
+This runs your Flask API using Gunicorn on port 8080 with 4 worker processes.
 ---
 
 ## 🔮 Future Enhancements  
 🚀 **Web Interface** – Simple UI for chat interaction.  
-🚀 **Voice Input** – Explore Web Speech API for spoken queries.  
+🚀 **Voice Input** – Integrate voice processing (e.g., using OpenAI Whisper).  
 🚀 **User Data Tracking** – Store user interactions for personalized learning.  
-🚀 **Deployment** – Host the API on Render, Heroku, or AWS.  
+🚀 **Deployment** – Use Gunicorn (or another WSGI server) with a reverse proxy (e.g., Nginx) for production deployments. 
 
 
 ---
