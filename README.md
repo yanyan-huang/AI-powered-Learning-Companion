@@ -4,13 +4,12 @@
 This **AI-powered learning companion** provides **mentorship, tutoring, and mock interview coaching** for **aspiring and transitioning Product Managers**. It leverages AI to offer **structured learning paths, real-time feedback, and interactive interview practice** via **Telegram**.
 
 ## 🎯 MVP Focus:
-👉 **Mentor Mode** – AI recommends structured learning paths, courses, books, and career advice.  
-👉 **Tutor Mode** – AI provides Q&A assistance for PM concepts with real-world examples.  
-👉 **Mock Interview Mode** – AI conducts simulated PM interviews and gives structured feedback.  
+👉 **Mentor Mode** – AI recommends personalized gap analysis and structured learning paths tailored to individual goals.
+👉 **Coach Mode** – AI provides interactive Q&A and guided case study to enhance critical thinking and experiential learning.  
+👉 **Mock Interview Mode** – AI simulates different types of PM interviews and gives structured feedback for improvements.  
 👉 **Telegram Bot** – Users interact with the AI directly via Telegram, with text and voice support.  
 
 ## 🚀 Future Exploration  
-🔜 **Coach Mode** – Guides users in **case study learning**, prompting user research while following **canonical frameworks**.  
 🔜 **Web UI** – Extend interaction beyond Telegram via a simple chat interface.  
 🔜 **Advanced Voice Input** – Enhance transcription accuracy for better responses.  
 🔜 **User Data Tracking** – Store user interactions for personalized learning experiences.  
