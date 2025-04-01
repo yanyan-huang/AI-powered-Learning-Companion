@@ -25,6 +25,13 @@ This AI-powered learning companion provides mentorship, coaching, and mock inter
 - **Gunicorn:** A production-ready WSGI server to deploy the Flask API.
 - **python-dotenv:** Manages environment variables securely.
 
+## 🏗️ Architecture
+- **Pattern:** Model-View-Controller (MVC)
+- **Components:**
+  - Model: AI and business logic
+  - View: Web interface and CLI
+  - Controller: Request handling and routing
+
 ## 📂 Folder Structure
 ```
 /Project_directory

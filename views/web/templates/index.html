@@ -6,6 +6,7 @@
     <title>PM Pal - Your Project Management Assistant</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -32,10 +33,9 @@
             max-width: 85%;
             transition: all 0.3s ease;
             line-height: 1.6;
-        }
-        .message-bubble:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1rem;
+            margin: 0.5rem;
+            border-radius: 1rem;
         }
         .message-bubble p {
             margin-bottom: 0.75rem;
@@ -80,36 +80,77 @@
         }
         .message-bubble strong {
             font-weight: 600;
-            color: rgba(0, 0, 0, 0.9);
+            color: inherit;
         }
         .message-bubble em {
             font-style: italic;
         }
+        .user-message .message-bubble {
+            background-color: #007AFF;
+            color: white;
+            margin-left: auto;
+        }
+        .bot-message .message-bubble {
+            background-color: #f0f0f0;
+            color: #1a1a1a;
+        }
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
         .mode-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 500;
             transition: all 0.3s ease;
-            border: 1px solid transparent;
+            background-color: #f0f0f0;
+            color: #1a1a1a;
         }
         .mode-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         .mode-btn.active {
-            background: linear-gradient(135deg, #007AFF 0%, #0056b3 100%);
+            background-color: #007AFF;
             color: white;
-            border: none;
         }
-        .input-focus {
+        .input-area {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 1rem;
+            margin-top: 1rem;
+        }
+        #user-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            resize: none;
+            min-height: 2.5rem;
+            max-height: 8rem;
+        }
+        .send-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: #007AFF;
+            color: white;
+            border-radius: 0.5rem;
             transition: all 0.3s ease;
         }
-        .input-focus:focus {
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+        .send-btn:hover {
+            background-color: #0056b3;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        #chat-messages {
+            padding: 1rem;
+            overflow-y: auto;
+            height: calc(100% - 4rem);
         }
         .message {
-            animation: fadeIn 0.3s ease-out;
+            display: flex;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
@@ -121,115 +162,64 @@
         </header>
 
         <div class="bg-white rounded-2xl shadow-xl p-8 backdrop-blur-lg bg-opacity-90">
-            <!-- Mode Selection -->
-            <div class="mb-8">
-                <h2 class="text-lg font-semibold text-gray-700 mb-4 text-center">Select Your Learning Mode:</h2>
-                <div class="flex justify-center space-x-4">
-                    <button onclick="setMode('mentor')" class="mode-btn px-6 py-3 rounded-full bg-blue-50 text-blue-700 font-medium">
-                        Mentor Mode
-                    </button>
-                    <button onclick="setMode('coach')" class="mode-btn px-6 py-3 rounded-full bg-green-50 text-green-700 font-medium">
-                        Coach Mode
-                    </button>
-                    <button onclick="setMode('interviewer')" class="mode-btn px-6 py-3 rounded-full bg-purple-50 text-purple-700 font-medium">
-                        Interviewer Mode
-                    </button>
-                </div>
+            <div class="mode-selector">
+                <button class="mode-btn" data-mode="mentor">Mentor Mode</button>
+                <button class="mode-btn" data-mode="coach">Coach Mode</button>
+                <button class="mode-btn" data-mode="interview">Mock Interview</button>
             </div>
-
-            <!-- Chat Messages -->
-            <div class="mb-6">
-                <div class="chat-container overflow-y-auto px-2" id="chat-messages">
-                    <!-- Messages will be inserted here -->
-                </div>
-            </div>
-
-            <!-- Input Form -->
-            <div>
-                <form id="chat-form" class="flex gap-4">
-                    <input type="text" 
-                           id="user-input" 
-                           class="flex-1 p-4 border-2 border-gray-200 rounded-full input-focus focus:outline-none focus:border-blue-500 text-gray-700 placeholder-gray-400"
-                           placeholder="Ask me anything about product management...">
-                    <button type="submit" 
-                            class="bg-blue-600 text-white px-8 py-4 rounded-full font-medium hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center">
-                        Send
-                    </button>
-                </form>
+            <div id="chat-messages"></div>
+            <div class="input-area">
+                <textarea id="user-input" placeholder="Type your message here..." rows="1"></textarea>
+                <button class="send-btn" id="send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        let currentMode = 'mentor'; // Default mode
+        let currentMode = 'mentor';
 
-        function setMode(mode) {
-            currentMode = mode;
-            // Update button styles
-            document.querySelectorAll('.mode-btn').forEach(btn => {
-                btn.classList.remove('active');
+        // Mode selection handling
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentMode = btn.dataset.mode;
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Add greeting message based on mode
+                const greetings = {
+                    mentor: "Hello! I'm your PM mentor. I can help you with product management concepts, best practices, and career advice. What would you like to know?",
+                    coach: "Hi! I'm your PM coach. I'll help you develop your product management skills through practical exercises and feedback. What would you like to work on?",
+                    interview: "Welcome to your PM mock interview! I'll simulate real PM interview scenarios and provide detailed feedback. Are you ready to begin?"
+                };
+                
+                addMessage('bot', greetings[currentMode]);
             });
-            event.target.classList.add('active');
-        }
-
-        document.getElementById('chat-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const input = document.getElementById('user-input');
-            const message = input.value.trim();
-            
-            if (!message) return;
-
-            // Add user message to chat
-            addMessage('user', message);
-            input.value = '';
-
-            try {
-                const response = await fetch('/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        message,
-                        mode: currentMode
-                    }),
-                });
-
-                const data = await response.json();
-                addMessage('assistant', data.response);
-            } catch (error) {
-                console.error('Error:', error);
-                addMessage('assistant', 'Sorry, I encountered an error. Please try again.');
-            }
         });
 
+        // Message display
         function addMessage(sender, text) {
-            const chatMessages = document.getElementById('chat-messages');
+            const messagesDiv = document.getElementById('chat-messages');
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message mb-4 flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
-            
+            messageDiv.className = `message ${sender}-message`;
             const bubble = document.createElement('div');
-            bubble.className = `message-bubble p-4 rounded-2xl ${
-                sender === 'user' 
-                    ? 'bg-blue-400 text-white' 
-                    : 'bg-gray-100 text-gray-800'
-            }`;
-            
+            bubble.className = 'message-bubble';
             bubble.innerHTML = formatMessageText(text);
             messageDiv.appendChild(bubble);
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
         function formatMessageText(text) {
-            // First escape any existing HTML entities to prevent XSS
+            // First escape any HTML to prevent XSS
             text = text.replace(/&/g, '&amp;')
                       .replace(/</g, '&lt;')
                       .replace(/>/g, '&gt;')
                       .replace(/"/g, '&quot;')
                       .replace(/'/g, '&#039;');
 
-            // Process text into paragraphs
+            // Split into paragraphs
             let paragraphs = text.split('\n\n').filter(p => p.trim());
             
             // Process each paragraph
@@ -252,7 +242,7 @@
         }
 
         function formatParagraph(text) {
-            // First apply inline formatting
+            // Apply inline formatting
             text = formatInlineElements(text);
             
             // Replace line breaks with spaces
@@ -262,14 +252,11 @@
         }
 
         function formatList(text) {
-            // First apply inline formatting
             text = formatInlineElements(text);
             
             const lines = text.split('\n').filter(line => line.trim());
             const items = lines.map(line => {
-                // Remove the bullet point and trim
                 const content = line.replace(/^-\s*/, '').trim();
-                // Split by colon or first period to identify key information
                 const parts = content.split(/[:.]/);
                 if (parts.length > 1) {
                     return `<li><strong>${parts[0].trim()}:</strong> ${parts.slice(1).join('.').trim()}</li>`;
@@ -281,19 +268,16 @@
         }
 
         function formatNumberedList(text) {
-            // First apply inline formatting
             text = formatInlineElements(text);
             
             const lines = text.split('\n').filter(line => line.trim());
             const items = lines.map(line => {
-                // Extract the number and content
                 const match = line.match(/^(\d+)\.\s*(.+)$/);
                 if (!match) return `<li>${line}</li>`;
                 
                 const number = match[1];
                 const content = match[2].trim();
                 
-                // Split by colon or first period to identify key information
                 const parts = content.split(/[:.]/);
                 if (parts.length > 1) {
                     return `<li><span class="font-medium">${number}.</span> <strong>${parts[0].trim()}:</strong> ${parts.slice(1).join('.').trim()}</li>`;
@@ -305,28 +289,67 @@
         }
 
         function formatBlockquote(text) {
-            // First apply inline formatting
             text = formatInlineElements(text);
-            
-            // Remove the blockquote marker and trim
             text = text.replace(/^>\s*/, '').trim();
             return `<blockquote>${text}</blockquote>`;
         }
 
         function formatCodeBlock(text) {
-            // Remove the code block markers and trim
             text = text.replace(/^```\s*/, '').replace(/```$/, '').trim();
             return `<pre><code>${text}</code></pre>`;
         }
 
         function formatInlineElements(text) {
-            // Apply markdown-style formatting
-            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Bold
+            return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Bold
                       .replace(/\*(.*?)\*/g, '<em>$1</em>')              // Italic
-                      .replace(/`(.*?)`/g, '<code>$1</code>');          // Code
-            
-            return text;
+                      .replace(/`(.*?)`/g, '<code>$1</code>');           // Code
         }
+
+        // Text input handling
+        const sendBtn = document.getElementById('send-btn');
+        const userInput = document.getElementById('user-input');
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            addMessage('user', message);
+            userInput.value = '';
+            
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        mode: currentMode
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                addMessage('bot', data.response);
+            } catch (error) {
+                console.error('Error sending message:', error);
+                addMessage('bot', 'Sorry, I encountered an error processing your message. Please try again.');
+            }
+        }
+
+        // Set initial active mode and show greeting
+        document.querySelector('[data-mode="mentor"]').click();
     </script>
 </body>
 </html> 
