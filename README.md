@@ -9,6 +9,7 @@ This AI-powered learning companion provides mentorship, coaching, and mock inter
 - **Mock Interview Mode** – AI conducts simulated PM interviews and provides structured feedback.
 - **Flask API** – Exposes a RESTful API for integration with future web or mobile interfaces.
 - **CLI Interface** – Allows direct interaction with the backend for testing and debugging.
+- **Web Interface** – Basic chat interface for interacting with the AI assistant.
 
 ## 🚀 Future Enhancements
 - **Web UI:** Extend interaction via a web-based chat interface.
