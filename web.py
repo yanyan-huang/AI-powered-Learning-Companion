@@ -12,13 +12,18 @@ Usage:
     python web.py
 """
 
-from chatbot.web_view import ChatbotWebView
+from chatbot.controller import ChatbotController
+from chatbot.model import ChatbotAIModel
+from views.web.web_view import ChatbotWebView
+
+def main():
+    # Initialize MVC components
+    model = ChatbotAIModel()
+    controller = ChatbotController(model)
+    view = ChatbotWebView(controller)
+    
+    # Run the web interface
+    view.run()
 
 if __name__ == "__main__":
-    # Initialize the web view with Flask application
-    web_view = ChatbotWebView()
-    
-    # Run the Flask development server
-    # debug=True enables auto-reload on code changes and detailed error messages
-    # This should be disabled in production
-    web_view.run(debug=True) 
+    main() 

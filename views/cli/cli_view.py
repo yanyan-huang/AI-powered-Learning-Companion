@@ -1,3 +1,4 @@
+from chatbot.controller import ChatbotController
 from chatbot.model import ChatbotAIModel
 
 class ChatbotCLIView:
@@ -6,12 +7,13 @@ class ChatbotCLIView:
     This class serves as the **View** in the MVC architecture.
     It provides a CLI interface for users to interact with the chatbot.
 
-    The **CLI View** calls the **Model (`ChatbotAIModel`)** directly, without needing an API.
+    The **CLI View** uses the **Controller** to process user input and generate responses.
     """
 
     def __init__(self):
-        """Initialize CLI chatbot with AI model."""
-        self.chatbot_model = ChatbotAIModel()  # Create an instance of ChatbotAIModel
+        """Initialize CLI chatbot with controller and model."""
+        model = ChatbotAIModel()
+        self.controller = ChatbotController(model)
 
     def run(self):
         """Run CLI chatbot interaction."""
@@ -31,5 +33,5 @@ class ChatbotCLIView:
                 print("Exiting chat. Keep learning and growing! 🚀")
                 break
 
-            response = self.chatbot_model.chat(user_input, mode)  # Get AI response from Model
+            response = self.controller.process_message(user_input, mode)
             print(f"🤖 AI {mode.capitalize()}: {response}")

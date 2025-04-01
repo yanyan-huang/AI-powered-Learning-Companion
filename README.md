@@ -28,21 +28,32 @@ This AI-powered learning companion provides mentorship, coaching, and mock inter
 ## 📂 Folder Structure
 ```
 /Project_directory
-│-- api.py      # API Entry Point
-│-- web.py      # Web Interface Entry Point
-│-- cli.py      # CLI Interface Entry Point
-│-- chatbot/    # Main Application Code
+├── chatbot/           # Core Application Logic
 │   ├── __init__.py
-│   ├── model.py      # AI Model (Business logic)
-│   ├── controller.py # API Controller (Flask logic)
-│   ├── cli_view.py   # CLI Interface (View)
-│   └── web_view.py   # Web Interface (View)
-│-- tests/      # Test Scripts
-│   ├── test_api.py   # API Test Script
-│-- requirements.txt   # Python Dependencies
-│-- README.md         # Project Documentation
-│-- .env             # Environment Variables (not tracked by Git)
-│-- wsgi.py          # WSGI Entry Point for Production Deployment
+│   ├── model.py      # Model: AI Model & Business Logic
+│   └── controller.py # Controller: Request Handling & Logic
+├── views/            # All View-Related Code
+│   ├── cli/         # CLI Interface
+│   │   ├── __init__.py
+│   │   └── cli_view.py
+│   └── web/         # Web Interface
+│       ├── __init__.py
+│       ├── web_view.py
+│       ├── templates/
+│       │   └── index.html
+│       └── static/
+│           ├── css/
+│           └── js/
+├── tests/           # Test Files
+│   ├── __init__.py
+│   └── test_chatbot.py
+├── api.py           # API Entry Point
+├── web.py           # Web Interface Entry Point
+├── cli.py           # CLI Interface Entry Point
+├── requirements.txt # Python Dependencies
+├── README.md        # Project Documentation
+├── .env             # Environment Variables
+└── wsgi.py         # WSGI Entry Point
 ```
 
 ## 🔧 Installation & Setup
@@ -61,32 +72,15 @@ source venv/bin/activate  # For macOS/Linux
 pip install -r requirements.txt
 ```
 
-### 3️⃣ Set Up API Key Securely  
-
-#### **Option 1: Use an Environment Variable (Recommended)**
-```bash
-export OPENAI_API_KEY="your-api-key-here"  # macOS/Linux
-setx OPENAI_API_KEY "your-api-key-here"    # Windows (Command Prompt)
+### 3️⃣ Set Up Environment Variables
+Create a `.env` file in the project root:
+```
+OPENAI_API_KEY=your-api-key-here
+FLASK_ENV=development
+FLASK_APP=api.py
 ```
 
-#### **Option 2: Use a `.env` File**  
-1. Create a `.env` file in the project root:  
-   ```
-   OPENAI_API_KEY=your-api-key-here
-   ```
-2. Install `python-dotenv` if not already installed:  
-   ```bash
-   pip install python-dotenv
-   ```
-
-### 4️⃣ Install OpenAI Library 
-```bash
-pip install openai
-```  
-
-### 5️⃣ Run the Application
-Choose the appropriate entry point based on your needs:
-
+### 4️⃣ Run the Application
 ```bash
 # For API mode (Production)
 python api.py

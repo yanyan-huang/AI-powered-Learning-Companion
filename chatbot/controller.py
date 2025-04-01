@@ -1,65 +1,54 @@
-from flask import Flask, request, jsonify # Import Flask and request modules for API handling
+from flask import Flask, request, jsonify
 from chatbot.model import ChatbotAIModel
 
-class ChatbotAPIController:
-    """Handles API interactions for the chatbot.
+class ChatbotController:
+    """Handles interactions for the chatbot.
 
     This class serves as the **Controller** in the MVC architecture.
     It acts as an intermediary between:
       - The **Model (`ChatbotAIModel`)**: Handles AI processing.
       - The **View (CLI/Web App/External API Clients)**: Provides an interface for user interaction.
 
-    This Controller exposes an API interface via Flask, allowing external clients 
-    (web apps, mobile apps, CLI, etc.) to interact with the chatbot.
+    This Controller can be used by different interfaces (API, Web, CLI) to process
+    user input and generate responses using the AI model.
     """
 
-    def __init__(self):
-        """Initialize Flask API and ChatbotAIModel instance."""
-        self.chatbot_model = ChatbotAIModel()  # Create Model instance
-        self.app = Flask(__name__)  # Initialize Flask app
-        self.setup_routes()  # Define API routes
+    def __init__(self, model: ChatbotAIModel):
+        """Initialize controller with a model instance."""
+        self.model = model
+        self.app = Flask(__name__)  # Initialize Flask app for API/web interfaces
+        self.setup_routes()
 
     def setup_routes(self):
-        """Define API routes for handling chatbot requests.
-
-        This method sets up an HTTP endpoint (`/chat`) for external clients to interact with the chatbot.
-
-        Steps:
-        - Accepts JSON `POST` requests with `message` (user input) and `mode` (chatbot mode).
-        - Validates input parameters.
-        - Calls the AI Model (`ChatbotAIModel.chat()`) to generate a response.
-        - Returns the AI-generated response as a JSON object.
-        """
+        """Define routes for handling chatbot requests."""
         @self.app.route("/chat", methods=["POST"])
         def api_chat():
-            """API endpoint: Handles chatbot conversations via HTTP POST requests.
+            """API endpoint: Handles chatbot conversations via HTTP POST requests."""
+            data = request.get_json()
+            message = data.get("message", "")
+            mode = data.get("mode", "mentor")
 
-            **Expected Request Format (JSON)**:
-            {
-                "message": "Your question here",
-                "mode": "mentor"  # Can be 'mentor', 'coach', or 'interviewer'
-            }
+            if not message:
+                return jsonify({"error": "Message is required."}), 400
 
-            **Response Format (JSON)**:
-            {
-                "response": "AI-generated response based on mode"
-            }
-            """
-            data = request.json  # Get JSON data from the request
-            user_input = data.get("message")  # Extract user message
-            mode = data.get("mode")  # Extract the AI mode
+            response = self.process_message(message, mode)
+            return jsonify({"response": response})
 
-            # Validate mode to prevent errors in AI processing
-            if not mode:
-                return jsonify({"error": "Mode is required. Please specify 'mentor', 'coach', or 'interviewer'."}), 400
+    def process_message(self, message: str, mode: str = "mentor") -> str:
+        """Process a message and return the AI-generated response.
+        
+        Args:
+            message: The user's input message
+            mode: The chatbot mode ('mentor', 'coach', or 'interviewer')
+            
+        Returns:
+            str: The AI-generated response
+        """
+        return self.model.chat(message, mode)
 
-            response = self.chatbot_model.chat(user_input, mode)  # Call AI model function
-            return jsonify({"response": response})  # Return response as JSON
-
-    def run(self):
-        """Start the Flask API server."""
-        # Run on port 5000 (default Flask port)
-        self.app.run(debug=True, port=5000)
+    def run(self, port: int = 5000):
+        """Start the Flask server."""
+        self.app.run(debug=True, port=port)
 
 # Expose the Flask app for WSGI servers like Gunicorn
-app = ChatbotAPIController().app
+app = ChatbotController(ChatbotAIModel()).app

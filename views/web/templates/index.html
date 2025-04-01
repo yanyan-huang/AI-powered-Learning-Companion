@@ -49,6 +49,7 @@
         }
         .message-bubble li {
             margin-bottom: 0.5rem;
+            position: relative;
         }
         .message-bubble li:last-child {
             margin-bottom: 0;
@@ -121,34 +122,41 @@
 
         <div class="bg-white rounded-2xl shadow-xl p-8 backdrop-blur-lg bg-opacity-90">
             <!-- Mode Selection -->
-            <div class="mb-8 flex justify-center space-x-4">
-                <button onclick="setMode('mentor')" class="mode-btn px-6 py-3 rounded-full bg-blue-50 text-blue-700 font-medium">
-                    Mentor Mode
-                </button>
-                <button onclick="setMode('coach')" class="mode-btn px-6 py-3 rounded-full bg-green-50 text-green-700 font-medium">
-                    Coach Mode
-                </button>
-                <button onclick="setMode('interviewer')" class="mode-btn px-6 py-3 rounded-full bg-purple-50 text-purple-700 font-medium">
-                    Interviewer Mode
-                </button>
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4 text-center">Select Your Learning Mode:</h2>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="setMode('mentor')" class="mode-btn px-6 py-3 rounded-full bg-blue-50 text-blue-700 font-medium">
+                        Mentor Mode
+                    </button>
+                    <button onclick="setMode('coach')" class="mode-btn px-6 py-3 rounded-full bg-green-50 text-green-700 font-medium">
+                        Coach Mode
+                    </button>
+                    <button onclick="setMode('interviewer')" class="mode-btn px-6 py-3 rounded-full bg-purple-50 text-purple-700 font-medium">
+                        Interviewer Mode
+                    </button>
+                </div>
             </div>
 
             <!-- Chat Messages -->
-            <div class="chat-container overflow-y-auto mb-6 px-2" id="chat-messages">
-                <!-- Messages will be inserted here -->
+            <div class="mb-6">
+                <div class="chat-container overflow-y-auto px-2" id="chat-messages">
+                    <!-- Messages will be inserted here -->
+                </div>
             </div>
 
             <!-- Input Form -->
-            <form id="chat-form" class="flex gap-4">
-                <input type="text" 
-                       id="user-input" 
-                       class="flex-1 p-4 border-2 border-gray-200 rounded-full input-focus focus:outline-none focus:border-blue-500 text-gray-700 placeholder-gray-400"
-                       placeholder="Ask me anything about product management...">
-                <button type="submit" 
-                        class="bg-blue-600 text-white px-8 py-4 rounded-full font-medium hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center">
-                    Send
-                </button>
-            </form>
+            <div>
+                <form id="chat-form" class="flex gap-4">
+                    <input type="text" 
+                           id="user-input" 
+                           class="flex-1 p-4 border-2 border-gray-200 rounded-full input-focus focus:outline-none focus:border-blue-500 text-gray-700 placeholder-gray-400"
+                           placeholder="Ask me anything about product management...">
+                    <button type="submit" 
+                            class="bg-blue-600 text-white px-8 py-4 rounded-full font-medium hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center">
+                        Send
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -198,131 +206,127 @@
         function addMessage(sender, text) {
             const chatMessages = document.getElementById('chat-messages');
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message mb-6 ${sender === 'user' ? 'text-right' : 'text-left'}`;
+            messageDiv.className = `message mb-4 flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
             
             const bubble = document.createElement('div');
-            bubble.className = `inline-block p-4 rounded-2xl message-bubble ${
+            bubble.className = `message-bubble p-4 rounded-2xl ${
                 sender === 'user' 
-                    ? 'bg-blue-600 text-white' 
+                    ? 'bg-blue-400 text-white' 
                     : 'bg-gray-100 text-gray-800'
             }`;
             
-            // Format the text with proper line breaks and styling
-            const formattedText = formatMessageText(text);
-            bubble.innerHTML = formattedText;
-            
+            bubble.innerHTML = formatMessageText(text);
             messageDiv.appendChild(bubble);
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function formatMessageText(text) {
-            // First, split the text into paragraphs
-            let paragraphs = text.split(/\n\s*\n/);
+            // First escape any existing HTML entities to prevent XSS
+            text = text.replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&#039;');
+
+            // Process text into paragraphs
+            let paragraphs = text.split('\n\n').filter(p => p.trim());
             
             // Process each paragraph
             paragraphs = paragraphs.map(paragraph => {
-                // Handle lists
-                if (paragraph.trim().startsWith('-') || paragraph.trim().startsWith('*') || paragraph.trim().startsWith('•')) {
+                // Check if it's a list
+                if (paragraph.trim().startsWith('- ')) {
                     return formatList(paragraph);
-                }
-                // Handle numbered lists
-                else if (paragraph.trim().match(/^\d+\./)) {
+                } else if (paragraph.trim().match(/^\d+\./)) {
                     return formatNumberedList(paragraph);
-                }
-                // Handle code blocks
-                else if (paragraph.trim().startsWith('```')) {
-                    return formatCodeBlock(paragraph);
-                }
-                // Handle blockquotes
-                else if (paragraph.trim().startsWith('>')) {
+                } else if (paragraph.trim().startsWith('>')) {
                     return formatBlockquote(paragraph);
-                }
-                // Regular paragraph
-                else {
+                } else if (paragraph.trim().startsWith('```')) {
+                    return formatCodeBlock(paragraph);
+                } else {
                     return formatParagraph(paragraph);
                 }
             });
-            
+
             return paragraphs.join('\n');
         }
 
         function formatParagraph(text) {
-            // First format inline elements to remove markdown characters
+            // First apply inline formatting
             text = formatInlineElements(text);
             
-            // Then replace line breaks within paragraphs with spaces
+            // Replace line breaks with spaces
             text = text.replace(/\n/g, ' ');
             
             return `<p>${text}</p>`;
         }
 
         function formatList(text) {
-            const items = text.split('\n')
-                .map(line => line.trim())
-                .filter(line => line.startsWith('-') || line.startsWith('*') || line.startsWith('•'))
-                .map(line => line.replace(/^[-*•]\s*/, ''))
-                .map(line => {
-                    // Split by colon or first period to identify key information
-                    const parts = line.split(/[:.]/);
-                    if (parts.length > 1) {
-                        // Format inline elements and bold the first part
-                        return `<li><strong>${formatInlineElements(parts[0])}</strong>${formatInlineElements(parts.slice(1).join('.'))}</li>`;
-                    }
-                    return `<li>${formatInlineElements(line)}</li>`;
-                })
-                .join('\n');
+            // First apply inline formatting
+            text = formatInlineElements(text);
             
-            return `<ul>${items}</ul>`;
+            const lines = text.split('\n').filter(line => line.trim());
+            const items = lines.map(line => {
+                // Remove the bullet point and trim
+                const content = line.replace(/^-\s*/, '').trim();
+                // Split by colon or first period to identify key information
+                const parts = content.split(/[:.]/);
+                if (parts.length > 1) {
+                    return `<li><strong>${parts[0].trim()}:</strong> ${parts.slice(1).join('.').trim()}</li>`;
+                }
+                return `<li>${content}</li>`;
+            });
+            
+            return `<ul>${items.join('')}</ul>`;
         }
 
         function formatNumberedList(text) {
-            const items = text.split('\n')
-                .map(line => line.trim())
-                .filter(line => line.match(/^\d+\./))
-                .map(line => {
-                    const match = line.match(/^(\d+)\.\s*(.+)$/);
-                    const content = match[2];
-                    // Split by colon or first period to identify key information
-                    const parts = content.split(/[:.]/);
-                    if (parts.length > 1) {
-                        // Format inline elements and bold the first part
-                        return `<li><span class="font-medium">${match[1]}.</span> <strong>${formatInlineElements(parts[0])}</strong>${formatInlineElements(parts.slice(1).join('.'))}</li>`;
-                    }
-                    return `<li><span class="font-medium">${match[1]}.</span> ${formatInlineElements(content)}</li>`;
-                })
-                .join('\n');
+            // First apply inline formatting
+            text = formatInlineElements(text);
             
-            return `<ol class="list-none">${items}</ol>`;
-        }
-
-        function formatCodeBlock(text) {
-            // Remove the ``` markers
-            text = text.replace(/^```\n?/, '').replace(/\n?```$/, '');
-            return `<pre><code>${text}</code></pre>`;
+            const lines = text.split('\n').filter(line => line.trim());
+            const items = lines.map(line => {
+                // Extract the number and content
+                const match = line.match(/^(\d+)\.\s*(.+)$/);
+                if (!match) return `<li>${line}</li>`;
+                
+                const number = match[1];
+                const content = match[2].trim();
+                
+                // Split by colon or first period to identify key information
+                const parts = content.split(/[:.]/);
+                if (parts.length > 1) {
+                    return `<li><span class="font-medium">${number}.</span> <strong>${parts[0].trim()}:</strong> ${parts.slice(1).join('.').trim()}</li>`;
+                }
+                return `<li><span class="font-medium">${number}.</span> ${content}</li>`;
+            });
+            
+            return `<ol class="list-none">${items.join('')}</ol>`;
         }
 
         function formatBlockquote(text) {
-            // Remove the > markers
-            text = text.replace(/^>\s*/gm, '');
-            return `<blockquote>${formatInlineElements(text)}</blockquote>`;
+            // First apply inline formatting
+            text = formatInlineElements(text);
+            
+            // Remove the blockquote marker and trim
+            text = text.replace(/^>\s*/, '').trim();
+            return `<blockquote>${text}</blockquote>`;
+        }
+
+        function formatCodeBlock(text) {
+            // Remove the code block markers and trim
+            text = text.replace(/^```\s*/, '').replace(/```$/, '').trim();
+            return `<pre><code>${text}</code></pre>`;
         }
 
         function formatInlineElements(text) {
-            // First escape any existing HTML entities
-            text = text.replace(/&/g, '&amp;')
-                      .replace(/</g, '&lt;')
-                      .replace(/>/g, '&gt;');
+            // Apply markdown-style formatting
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Bold
+                      .replace(/\*(.*?)\*/g, '<em>$1</em>')              // Italic
+                      .replace(/`(.*?)`/g, '<code>$1</code>');          // Code
             
-            // Then apply markdown formatting
-            return text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/`(.*?)`/g, '<code>$1</code>');
+            return text;
         }
-
-        // Set initial mode button style
-        document.querySelector('.mode-btn').classList.add('active');
     </script>
 </body>
 </html> 
