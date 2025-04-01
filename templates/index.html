@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM Pal - Your Project Management Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            min-height: 100vh;
+        }
+        .chat-container {
+            height: calc(100vh - 280px);
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e0 #f7fafc;
+        }
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background: #f7fafc;
+            border-radius: 3px;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background-color: #cbd5e0;
+            border-radius: 3px;
+        }
+        .message-bubble {
+            max-width: 85%;
+            transition: all 0.3s ease;
+            line-height: 1.6;
+        }
+        .message-bubble:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .message-bubble p {
+            margin-bottom: 0.75rem;
+        }
+        .message-bubble p:last-child {
+            margin-bottom: 0;
+        }
+        .message-bubble ul, .message-bubble ol {
+            margin: 0.75rem 0;
+            padding-left: 1.5rem;
+        }
+        .message-bubble li {
+            margin-bottom: 0.5rem;
+        }
+        .message-bubble li:last-child {
+            margin-bottom: 0;
+        }
+        .message-bubble code {
+            font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        .message-bubble pre {
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        .message-bubble pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        .message-bubble blockquote {
+            margin: 1rem 0;
+            padding-left: 1rem;
+            border-left: 3px solid rgba(0, 0, 0, 0.1);
+            color: rgba(0, 0, 0, 0.7);
+        }
+        .message-bubble strong {
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.9);
+        }
+        .message-bubble em {
+            font-style: italic;
+        }
+        .mode-btn {
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .mode-btn.active {
+            background: linear-gradient(135deg, #007AFF 0%, #0056b3 100%);
+            color: white;
+            border: none;
+        }
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-gray-900 mb-4 tracking-tight">PM Pal</h1>
+            <p class="text-xl text-gray-600 font-light">AI-powered learning companion for your product management journey</p>
+        </header>
+
+        <div class="bg-white rounded-2xl shadow-xl p-8 backdrop-blur-lg bg-opacity-90">
+            <!-- Mode Selection -->
+            <div class="mb-8 flex justify-center space-x-4">
+                <button onclick="setMode('mentor')" class="mode-btn px-6 py-3 rounded-full bg-blue-50 text-blue-700 font-medium">
+                    Mentor Mode
+                </button>
+                <button onclick="setMode('coach')" class="mode-btn px-6 py-3 rounded-full bg-green-50 text-green-700 font-medium">
+                    Coach Mode
+                </button>
+                <button onclick="setMode('interviewer')" class="mode-btn px-6 py-3 rounded-full bg-purple-50 text-purple-700 font-medium">
+                    Interviewer Mode
+                </button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-container overflow-y-auto mb-6 px-2" id="chat-messages">
+                <!-- Messages will be inserted here -->
+            </div>
+
+            <!-- Input Form -->
+            <form id="chat-form" class="flex gap-4">
+                <input type="text" 
+                       id="user-input" 
+                       class="flex-1 p-4 border-2 border-gray-200 rounded-full input-focus focus:outline-none focus:border-blue-500 text-gray-700 placeholder-gray-400"
+                       placeholder="Ask me anything about product management...">
+                <button type="submit" 
+                        class="bg-blue-600 text-white px-8 py-4 rounded-full font-medium hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center">
+                    Send
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'mentor'; // Default mode
+
+        function setMode(mode) {
+            currentMode = mode;
+            // Update button styles
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        document.getElementById('chat-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message to chat
+            addMessage('user', message);
+            input.value = '';
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        message,
+                        mode: currentMode
+                    }),
+                });
+
+                const data = await response.json();
+                addMessage('assistant', data.response);
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('assistant', 'Sorry, I encountered an error. Please try again.');
+            }
+        });
+
+        function addMessage(sender, text) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message mb-6 ${sender === 'user' ? 'text-right' : 'text-left'}`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = `inline-block p-4 rounded-2xl message-bubble ${
+                sender === 'user' 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-gray-100 text-gray-800'
+            }`;
+            
+            // Format the text with proper line breaks and styling
+            const formattedText = formatMessageText(text);
+            bubble.innerHTML = formattedText;
+            
+            messageDiv.appendChild(bubble);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function formatMessageText(text) {
+            // First, split the text into paragraphs
+            let paragraphs = text.split(/\n\s*\n/);
+            
+            // Process each paragraph
+            paragraphs = paragraphs.map(paragraph => {
+                // Handle lists
+                if (paragraph.trim().startsWith('-') || paragraph.trim().startsWith('*') || paragraph.trim().startsWith('•')) {
+                    return formatList(paragraph);
+                }
+                // Handle numbered lists
+                else if (paragraph.trim().match(/^\d+\./)) {
+                    return formatNumberedList(paragraph);
+                }
+                // Handle code blocks
+                else if (paragraph.trim().startsWith('```')) {
+                    return formatCodeBlock(paragraph);
+                }
+                // Handle blockquotes
+                else if (paragraph.trim().startsWith('>')) {
+                    return formatBlockquote(paragraph);
+                }
+                // Regular paragraph
+                else {
+                    return formatParagraph(paragraph);
+                }
+            });
+            
+            return paragraphs.join('\n');
+        }
+
+        function formatParagraph(text) {
+            // First format inline elements to remove markdown characters
+            text = formatInlineElements(text);
+            
+            // Then replace line breaks within paragraphs with spaces
+            text = text.replace(/\n/g, ' ');
+            
+            return `<p>${text}</p>`;
+        }
+
+        function formatList(text) {
+            const items = text.split('\n')
+                .map(line => line.trim())
+                .filter(line => line.startsWith('-') || line.startsWith('*') || line.startsWith('•'))
+                .map(line => line.replace(/^[-*•]\s*/, ''))
+                .map(line => {
+                    // Split by colon or first period to identify key information
+                    const parts = line.split(/[:.]/);
+                    if (parts.length > 1) {
+                        // Format inline elements and bold the first part
+                        return `<li><strong>${formatInlineElements(parts[0])}</strong>${formatInlineElements(parts.slice(1).join('.'))}</li>`;
+                    }
+                    return `<li>${formatInlineElements(line)}</li>`;
+                })
+                .join('\n');
+            
+            return `<ul>${items}</ul>`;
+        }
+
+        function formatNumberedList(text) {
+            const items = text.split('\n')
+                .map(line => line.trim())
+                .filter(line => line.match(/^\d+\./))
+                .map(line => {
+                    const match = line.match(/^(\d+)\.\s*(.+)$/);
+                    const content = match[2];
+                    // Split by colon or first period to identify key information
+                    const parts = content.split(/[:.]/);
+                    if (parts.length > 1) {
+                        // Format inline elements and bold the first part
+                        return `<li><span class="font-medium">${match[1]}.</span> <strong>${formatInlineElements(parts[0])}</strong>${formatInlineElements(parts.slice(1).join('.'))}</li>`;
+                    }
+                    return `<li><span class="font-medium">${match[1]}.</span> ${formatInlineElements(content)}</li>`;
+                })
+                .join('\n');
+            
+            return `<ol class="list-none">${items}</ol>`;
+        }
+
+        function formatCodeBlock(text) {
+            // Remove the ``` markers
+            text = text.replace(/^```\n?/, '').replace(/\n?```$/, '');
+            return `<pre><code>${text}</code></pre>`;
+        }
+
+        function formatBlockquote(text) {
+            // Remove the > markers
+            text = text.replace(/^>\s*/gm, '');
+            return `<blockquote>${formatInlineElements(text)}</blockquote>`;
+        }
+
+        function formatInlineElements(text) {
+            // First escape any existing HTML entities
+            text = text.replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;');
+            
+            // Then apply markdown formatting
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code>$1</code>');
+        }
+
+        // Set initial mode button style
+        document.querySelector('.mode-btn').classList.add('active');
+    </script>
+</body>
+</html> 

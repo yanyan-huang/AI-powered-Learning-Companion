@@ -58,7 +58,8 @@ class ChatbotAPIController:
 
     def run(self):
         """Start the Flask API server."""
-        self.app.run(debug=True)
+        # Run on port 5000 (default Flask port)
+        self.app.run(debug=True, port=5000)
 
 # Expose the Flask app for WSGI servers like Gunicorn
 app = ChatbotAPIController().app

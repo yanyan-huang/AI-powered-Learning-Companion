@@ -27,21 +27,22 @@ This AI-powered learning companion provides mentorship, coaching, and mock inter
 ## 📂 Folder Structure
 ```
 /Project_directory
-│-- app.py # Flask API Entry Point
-│-- cli.py # CLI Chatbot Entry Point
-│-- chatbot/ # Main Application Code
-│   ├── init.py # Makes chatbot a package
-│   ├── model.py # AI Model (Business logic)
-│   ├── controller.py # API Controller (Flask logic)
-│   ├── view.py # CLI Interface (View)
-│-- tests/ # Test Scripts
-│   ├── test_api.py # API Test Script
-│-- requirements.txt # Python Dependencies
-│-- README.md # Project Documentation
-│-- .env # Environment Variables (not tracked by Git)
-│-- wsgi.py # WSGI Entry Point for Production Deployment
+│-- api.py      # API Entry Point
+│-- web.py      # Web Interface Entry Point
+│-- cli.py      # CLI Interface Entry Point
+│-- chatbot/    # Main Application Code
+│   ├── __init__.py
+│   ├── model.py      # AI Model (Business logic)
+│   ├── controller.py # API Controller (Flask logic)
+│   ├── cli_view.py   # CLI Interface (View)
+│   └── web_view.py   # Web Interface (View)
+│-- tests/      # Test Scripts
+│   ├── test_api.py   # API Test Script
+│-- requirements.txt   # Python Dependencies
+│-- README.md         # Project Documentation
+│-- .env             # Environment Variables (not tracked by Git)
+│-- wsgi.py          # WSGI Entry Point for Production Deployment
 ```
----
 
 ## 🔧 Installation & Setup
 
@@ -49,7 +50,6 @@ This AI-powered learning companion provides mentorship, coaching, and mock inter
 ```bash
 git clone https://github.com/yanyan-huang/AI-powered-Learning-Companion.git
 cd AI-powered-Learning-Companion
-
 ```
 
 ### 2️⃣ Create a Virtual Environment & Install Dependencies  
@@ -83,32 +83,30 @@ setx OPENAI_API_KEY "your-api-key-here"    # Windows (Command Prompt)
 pip install openai
 ```  
 
-### 5️⃣ Run the the Application
-For API Mode (Product)
-Using Flask's Development Server (for local testing):
-```bash
-python app.py
-```
-Using Gunicorn (Recommended for Production):
-```bash
-gunicorn -w 4 -b 0.0.0.0:8080 wsgi:app
-```
+### 5️⃣ Run the Application
+Choose the appropriate entry point based on your needs:
 
-For CLI Mode (Development)
 ```bash
+# For API mode (Production)
+python api.py
+
+# For Web Interface (Development)
+python web.py
+
+# For CLI Interface (Development/Testing)
 python cli.py
 ```
 
+For Production Deployment with Gunicorn:
+```bash
+gunicorn -w 4 -b 0.0.0.0:8080 wsgi:app
 ```
-This runs your Flask API using Gunicorn on port 8080 with 4 worker processes.
----
 
 ## 🔮 Future Enhancements  
 🚀 **Web Interface** – Simple UI for chat interaction.  
 🚀 **Voice Input** – Integrate voice processing (e.g., using OpenAI Whisper).  
 🚀 **User Data Tracking** – Store user interactions for personalized learning.  
-🚀 **Deployment** –Consider using Gunicorn with a reverse proxy (e.g., Nginx) or deploy on popular platforms like Render or AWS for automated scaling and reduced operational overhead.
-
+🚀 **Deployment** – Consider using Gunicorn with a reverse proxy (e.g., Nginx) or deploy on popular platforms like Render or AWS for automated scaling and reduced operational overhead.
 
 ---
 
