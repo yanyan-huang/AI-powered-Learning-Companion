@@ -2,6 +2,7 @@ from ai import chat_with_ai, client  # Import AI functions for chat and mode swi
 from telegram.constants import ParseMode # Constants for text formatting in Telegram messages
 from telegram import Update # Handles updates (messages, commands) from Telegram users
 from moviepy.editor import AudioFileClip  # Handles audio file processing (converting voice messages)
+from greetings import GREETINGS # Import greeting messages for different modes
 
 # ==================== #
 #  Greeting Function   #
@@ -97,7 +98,11 @@ async def change_mode(update: Update, context, user_modes):
 
     # store selected mode for the user
     user_modes[user_id] = mode_choice
-    await update.message.reply_text(f"💡*Mode switched to {mode_choice.capitalize()} Mode.* You can now ask related questions!", parse_mode=ParseMode.MARKDOWN)
+    await update.message.reply_text(
+        f"💡 *Mode switched to {mode_choice.capitalize()} Mode.*\n\n{GREETINGS[mode_choice]}",
+        parse_mode=ParseMode.MARKDOWN
+    )
+
 
 # =============================== #
 #  Message Handling - Text Input  #
