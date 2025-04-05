@@ -4,23 +4,60 @@
     {
       "role": "user",
       "content": "hi",
-      "timestamp": "2025-04-05T06:36:16.966617"
+      "timestamp": "2025-04-05T06:52:48.656156",
+      "source": "text"
     },
     {
       "role": "assistant",
-      "content": "Hi there! I'm here to help you on your journey to becoming a Product Manager.  To best guide you, I need a little more information about where you are now and where you want to be.\n\n**Step 1: Understand Your Current State**\n\nCould you please tell me about your background?  This includes your current role, experience level, and the industries you've worked in. It would also be incredibly helpful if you could paste your resume or key information (experience, skills, education) into the chat.  (File uploads aren't supported yet, so pasting is best).\n\n**Step 2: Understand Your Target**\n\nWhat's your target job role, company, industry, or level?  If you have a job description for a role you're interested in, please paste that in as well - it's optional but will be very useful for our analysis.",
-      "timestamp": "2025-04-05T06:36:16.973021"
+      "content": "Okay, I understand you're ready to proceed.  However, I still need the information requested in my previous responses to give you effective guidance. I need more detail about your CS specialization, relevant coursework, projects, and any specifics about your public communications experience.  Also, if you have a target job description for an APM role, sharing that will be very helpful.  \n\nCould you please provide these details so we can move forward with the gap analysis and personalized roadmap?",
+      "timestamp": "2025-04-05T06:52:48.657011"
     },
     {
       "role": "user",
-      "content": "Hi, I am now a CS master student. Before this, I had a work experience in communications. Now I want to look for entry-level associate prime manager role at tech companies like Google.",
-      "timestamp": "2025-04-05T06:36:56.131242"
+      "content": "for now",
+      "timestamp": "2025-04-05T06:54:56.005846",
+      "source": "transcript"
     },
     {
       "role": "assistant",
-      "content": "Okay, great! A CS Master's degree combined with communications experience gives you a solid foundation for a career in Product Management.  Targeting entry-level APM roles at top tech companies like Google is ambitious, but achievable with the right preparation.\n\nTo tailor a roadmap specifically for you, I need some more details.\n\n**Step 1: Deep Dive into Your Current State**\n\nCan you please share more about your communications work experience?  What were your responsibilities, what did you achieve, and what skills did you develop? Also, which areas within Computer Science are you focusing on during your master's program?  Pasting relevant parts of your resume or listing your key skills and projects would be highly beneficial.\n\n**Step 2: Refine Your Target**\n\nWhile aiming for Google is excellent, having a few other target companies in mind is always a good strategy.  Do you have any other companies you're considering?  Also, if you can find a job description for an Associate Product Manager role at Google (or a similar company), pasting it here would be incredibly valuable.  It will help us pinpoint the specific skills and experiences they're looking for.",
-      "timestamp": "2025-04-05T06:36:56.132286"
+      "content": "Hi there! I'm here to help you transition into Product Management. To best guide you, I need to understand your current situation and your goals.\n\n**Step 1: Understanding Your Current State**\n\nCould you please share a bit about your background?  What is your current role, experience level, and what industries have you worked in?  Please also paste your resume or key information about your experience, skills, and education into the chat.  Don't worry about formatting, just the raw information is great.\n\n**Step 2: Understanding Your Target**\n\nWhat type of Product Management role are you targeting? Are you interested in a specific company, industry, or level (e.g., Associate Product Manager, Senior Product Manager)? If you have a job description for a role you're interested in, please paste that in as well.  This will help me tailor the advice specifically to your needs.",
+      "timestamp": "2025-04-05T06:54:56.006632"
+    },
+    {
+      "role": "user",
+      "content": "hi",
+      "timestamp": "2025-04-05T07:01:19.950504",
+      "source": "text"
+    },
+    {
+      "role": "assistant",
+      "content": "Hi there!  I'm here to help you navigate your path to becoming a Product Manager.  To best assist you, I need a little more information about your current situation and goals.\n\n**Step 1: Understand Your Current State**\n\nCould you please tell me about your background? What's your current role, experience level, and what industries have you worked in?  It would also be very helpful if you could share your resume or key information (experience, skills, and education) here in the chat.  Since I can't read uploaded files, pasting the text directly is best.\n\n**Step 2: Understand Your Target**\n\nWhat kind of Product Management role are you targeting? What type of company, industry, or level are you aiming for?  If you have a job description for a role you're interested in, pasting that here would be incredibly beneficial.",
+      "timestamp": "2025-04-05T07:01:19.951825",
+      "source": "text"
+    },
+    {
+      "role": "user",
+      "content": "hi",
+      "timestamp": "2025-04-05T07:01:24.379034",
+      "source": "text"
+    },
+    {
+      "role": "assistant",
+      "content": "Hi there!  I'm here to help you navigate your path to becoming a Product Manager.  To best assist you, I need a little more information about your current situation and goals.\n\n**Step 1: Understand Your Current State**\n\nCould you please tell me about your background? What's your current role, experience level, and what industries have you worked in?  It would also be very helpful if you could share your resume or key information (experience, skills, and education) here in the chat.  Since I can't read uploaded files, pasting the text directly is best.\n\n**Step 2: Understand Your Target**\n\nWhat kind of Product Management role are you targeting? What type of company, industry, or level are you aiming for?  If you have a job description for a role you're interested in, pasting that here would be incredibly beneficial.",
+      "timestamp": "2025-04-05T07:01:24.380715",
+      "source": "text"
+    },
+    {
+      "role": "user",
+      "content": "You",
+      "timestamp": "2025-04-05T07:01:33.515063",
+      "source": "transcript"
+    },
+    {
+      "role": "assistant",
+      "content": "Okay, let's get started. I need some information from you to tailor the guidance effectively.\n\n**Step 1: Understand Your Current State**\n\nCould you please tell me about your background? What's your current role, experience level, and what industries have you worked in?  It would also be very helpful if you could share your resume or key information (experience, skills, and education) here in the chat.  Since I can't read uploaded files, pasting the text directly is best.\n\n**Step 2: Understand Your Target**\n\nWhat kind of Product Management role are you targeting? What type of company, industry, or level are you aiming for?  If you have a job description for a role you're interested in, pasting that here would be incredibly beneficial.",
+      "timestamp": "2025-04-05T07:01:33.516264",
+      "source": "text"
     }
-  ],
-  "transcripts": []
+  ]
 }

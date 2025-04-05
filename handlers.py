@@ -5,7 +5,7 @@ from moviepy.editor import AudioFileClip  # Handles audio file processing (conve
 from greetings import GREETINGS # Import greeting messages for different modes
 from openai import OpenAI  # For Whisper speech-to-text
 from config import OPENAI_API_KEY # Import OpenAI API key for Whisper
-from storage import set_mode, log_interaction, add_transcript # Import functions to manage user data and session state
+from storage import set_mode, log_interaction # Import functions to manage user data and session state
 
 client = OpenAI(api_key=OPENAI_API_KEY) # Initialize OpenAI client for Whisper API
 
@@ -131,7 +131,7 @@ async def text_message(update: Update, context, user_modes):
     ai_response = chat_with_ai(user_id, user_input, user_modes[user_id])
 
     # log user input to history (JSON storage)
-    log_interaction(user_id, user_input, ai_response) # add_to_history(user_id, user_input)
+    log_interaction(user_id, user_input, ai_response, input_source="text") # add_to_history(user_id, user_input)
 
     await update.message.reply_text(
         f"🤖 *PM Pal:* {ai_response}", 
@@ -184,4 +184,4 @@ async def voice_message(update: Update, context, user_modes):
     # # Store the transcript in user data
     # add_transcript(user_id, transcript)
     # store the interaction in history
-    log_interaction(user_id, transcript, ai_response) # add_to_history(user_id, transcript)
+    log_interaction(user_id, transcript, ai_response, input_source="transcript") # add_to_history(user_id, transcript)
