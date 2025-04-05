@@ -24,12 +24,12 @@ GREETINGS = {
         "🎤 Welcome! I’m your PM Interview Coach — here to help you turn preparation into confidence,"
         "whether you're entering product for the first time or leveling up for your next big role! 🚀\n\n"
         "Which type of PM interview would you like to practice today?\n"
-        "- Initial Phone Screen\n"
-        "- Product Sense & Design\n"
-        "- Execution & Metrics\n"
-        "- Strategy & Business\n"
-        "- Technical understanding\n"
-        "- Behavioral & Leadership\n\n"
+        "- 📞 Initial Phone Screen\n"
+        "- 🎨 Product Sense & Design\n"
+        "- 📊 Execution & Metrics\n"
+        "- 📈 Strategy & Business\n"
+        "- 🛠️ Technical understanding\n"
+        "- 🤝 Behavioral & Leadership\n\n"
         "Let’s sharpen your interview skills together. Ready when you are!"
     )
 }
