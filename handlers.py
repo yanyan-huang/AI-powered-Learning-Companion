@@ -5,6 +5,7 @@ from moviepy.editor import AudioFileClip  # Handles audio file processing (conve
 from greetings import GREETINGS # Import greeting messages for different modes
 from openai import OpenAI  # For Whisper speech-to-text
 from config import OPENAI_API_KEY # Import OpenAI API key for Whisper
+from storage import set_mode, log_interaction, add_transcript # Import functions to manage user data and session state
 
 client = OpenAI(api_key=OPENAI_API_KEY) # Initialize OpenAI client for Whisper API
 
@@ -102,6 +103,8 @@ async def change_mode(update: Update, context, user_modes):
 
     # store selected mode for the user
     user_modes[user_id] = mode_choice
+    set_mode(user_id, mode_choice)  # Save the selected mode to user data
+    
     await update.message.reply_text(
         f"💡 *Mode switched to {mode_choice.capitalize()} Mode.*\n\n{GREETINGS[mode_choice]}",
         parse_mode=ParseMode.MARKDOWN
@@ -126,6 +129,10 @@ async def text_message(update: Update, context, user_modes):
 
     #  Generate AI Response Based on Mode #
     ai_response = chat_with_ai(user_id, user_input, user_modes[user_id])
+
+    # log user input to history (JSON storage)
+    log_interaction(user_id, user_input, ai_response) # add_to_history(user_id, user_input)
+
     await update.message.reply_text(
         f"🤖 *PM Pal:* {ai_response}", 
         parse_mode=ParseMode.HTML # ParseMode.MARKDOWN 
@@ -173,3 +180,8 @@ async def voice_message(update: Update, context, user_modes):
     # Generate AI response
     ai_response = chat_with_ai(user_id, transcript, user_modes[user_id])
     await update.message.reply_text(f"🤖 *PM Pal:* {ai_response}", parse_mode=ParseMode.MARKDOWN)
+
+    # # Store the transcript in user data
+    # add_transcript(user_id, transcript)
+    # store the interaction in history
+    log_interaction(user_id, transcript, ai_response) # add_to_history(user_id, transcript)
