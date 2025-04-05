@@ -18,7 +18,7 @@ llms = {
     ),
     "claude": ChatAnthropic(
         anthropic_api_key=CLAUDE_API_KEY,
-        model="claude-2"
+        model="claude-3-7-sonnet-20250219"
     )
 }
 
