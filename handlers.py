@@ -128,7 +128,7 @@ async def text_message(update: Update, context, user_modes):
     ai_response = chat_with_ai(user_id, user_input, user_modes[user_id])
     await update.message.reply_text(
         f"🤖 *PM Pal:* {ai_response}", 
-        parse_mode="Markdown" 
+        parse_mode=ParseMode.HTML # ParseMode.MARKDOWN 
     )
 
 # =============================== #
