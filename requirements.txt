@@ -1,4 +1,5 @@
 python-telegram-bot
+langchain
 openai
 moviepy==1.0.3  # Use a stable version
 imageio[ffmpeg]

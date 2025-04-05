@@ -1,4 +1,4 @@
-from ai import chat_with_ai, client  # Import AI functions for chat and mode switching
+from ai import chat_with_ai  # Import AI functions using LangChain-based router for chat and mode switching
 from telegram.constants import ParseMode # Constants for text formatting in Telegram messages
 from telegram import Update # Handles updates (messages, commands) from Telegram users
 from moviepy.editor import AudioFileClip  # Handles audio file processing (converting voice messages)
@@ -122,7 +122,10 @@ async def text_message(update: Update, context, user_modes):
 
     #  Generate AI Response Based on Mode #
     ai_response = chat_with_ai(user_id, user_input, user_modes[user_id])
-    await update.message.reply_text(f"🤖 *LearningPal:* {ai_response}", parse_mode="Markdown")
+    await update.message.reply_text(
+        f"🤖 *LearningPal:* {ai_response}", 
+        parse_mode="HTML" # Use HTML for better formatting
+    )
 
 # =============================== #
 #  Message Handling - Voice Input #
@@ -150,11 +153,12 @@ async def voice_message(update: Update, context, user_modes):
     audio_clip.write_audiofile("voice_message.mp3")
 
     # Transcribe the audio using OpenAI Whisper model
-    with open("voice_message.mp3", "rb") as audio_file:
-        transcript = client.audio.transcriptions.create(
-            model="whisper-1",
-            file=audio_file
-        ).text  # Extract transcript text
+    # with open("voice_message.mp3", "rb") as audio_file:
+        # transcript = client.audio.transcriptions.create(
+        #     model="whisper-1",
+        #     file=audio_file
+        # ).text  # Extract transcript text
+    transcript = "This is a placeholder transcript until Whisper integration is restored."  # TEMP
 
     # Display transcribed text and process it with AI
     await update.message.reply_text(f"🎙️ *You:* _{transcript}_", parse_mode=ParseMode.MARKDOWN)
