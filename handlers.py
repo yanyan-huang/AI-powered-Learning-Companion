@@ -3,6 +3,10 @@ from telegram.constants import ParseMode # Constants for text formatting in Tele
 from telegram import Update # Handles updates (messages, commands) from Telegram users
 from moviepy.editor import AudioFileClip  # Handles audio file processing (converting voice messages)
 from greetings import GREETINGS # Import greeting messages for different modes
+from openai import OpenAI  # For Whisper speech-to-text
+from config import OPENAI_API_KEY # Import OpenAI API key for Whisper
+
+client = OpenAI(api_key=OPENAI_API_KEY) # Initialize OpenAI client for Whisper API
 
 # ==================== #
 #  Greeting Function   #
@@ -12,7 +16,7 @@ async def greet_user(update):
     Sends a warm and engaging welcome message when the user first interacts with the bot.
     """
     await update.message.reply_text(
-        "👋 Hi! I'm your AI *Learning Pal*, your dedicated *mentor, coach, and mock interviewer* on your Product Management journey!🚀\n\n"
+        "👋 Hi! I'm *PM Pal*, your dedicated * AI mentor, coach, and mock interviewer* on your Product Management journey!🚀\n\n"
         "Think of me as your *always-there learning companion*—whether you're exploring PM fundamentals, refining your skills, or prepping for high-stakes interviews, I’ve got your back. \n\n",
         parse_mode="Markdown"
     )
@@ -123,8 +127,8 @@ async def text_message(update: Update, context, user_modes):
     #  Generate AI Response Based on Mode #
     ai_response = chat_with_ai(user_id, user_input, user_modes[user_id])
     await update.message.reply_text(
-        f"🤖 *LearningPal:* {ai_response}", 
-        parse_mode="HTML" # Use HTML for better formatting
+        f"🤖 *PM Pal:* {ai_response}", 
+        parse_mode="Markdown" 
     )
 
 # =============================== #
@@ -152,17 +156,20 @@ async def voice_message(update: Update, context, user_modes):
     audio_clip = AudioFileClip("voice_message.ogg")
     audio_clip.write_audiofile("voice_message.mp3")
 
-    # Transcribe the audio using OpenAI Whisper model
-    # with open("voice_message.mp3", "rb") as audio_file:
-        # transcript = client.audio.transcriptions.create(
-        #     model="whisper-1",
-        #     file=audio_file
-        # ).text  # Extract transcript text
-    transcript = "This is a placeholder transcript until Whisper integration is restored."  # TEMP
+    # Transcribe the audio using Whisper
+    try:
+        with open("voice_message.mp3", "rb") as audio_file:
+            transcript = client.audio.transcriptions.create(
+                model="whisper-1",
+                file=audio_file
+            ).text
+    except Exception as e:
+        await update.message.reply_text(f"❌ Error transcribing audio: {e}")
+        return
 
     # Display transcribed text and process it with AI
     await update.message.reply_text(f"🎙️ *You:* _{transcript}_", parse_mode=ParseMode.MARKDOWN)
 
     # Generate AI response
     ai_response = chat_with_ai(user_id, transcript, user_modes[user_id])
-    await update.message.reply_text(f"🤖 *LearningPal:* {ai_response}", parse_mode=ParseMode.MARKDOWN)
+    await update.message.reply_text(f"🤖 *PM Pal:* {ai_response}", parse_mode=ParseMode.MARKDOWN)
