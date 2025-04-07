@@ -4,13 +4,13 @@
 This **AI-powered learning companion** provides **mentorship, tutoring, and mock interview coaching** for **aspiring and transitioning Product Managers**. It leverages AI to offer **structured learning paths, real-time feedback, and interactive interview practice** via **Telegram**.
 
 ## 🎯 MVP Status:
-👉 **Mentor Mode** – AI recommends personalized gap analysis and structured learning paths tailored to individual goals.
+👉 **Mentor Mode** – AI recommends personalized gap analysis and structured learning paths tailored to individual goals.  
 👉 **Coach Mode** – AI provides interactive Q&A and guided case study to enhance critical thinking and experiential learning.  
 👉 **Mock Interview Mode** – AI simulates different types of PM interviews and gives structured feedback for improvements.  
 👉 **Telegram Bot** – Users interact with the AI directly via Telegram, with text and voice support.  
-👉 **Flexible LLM routing**: Switchable LLM providers — OpenAI (primary), Claude, Gemini (via config)
-👉 **Multimodal input**:  Text and voice (speech-to-text via Whisper)
-👉 **Session Logging** – Automatically saves user input + AI responses by mode and source in JSON.
+👉 **Flexible LLM routing**: Switchable LLM providers — OpenAI (primary), Claude, Gemini (via config)  
+👉 **Multimodal input**: Text and voice (speech-to-text via Whisper)  
+👉 **Session Logging** – Automatically saves user input + AI responses by mode and source in JSON.  
 
 ## 🚀 Future Exploration  
 🔜 **Web UI** – Extend interaction beyond Telegram via a simple chat interface (React + Flask).     
@@ -29,7 +29,7 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 | **Voice Support**    | MoviePy, OpenAI Whisper API                                   | Converts `.ogg` → `.mp3`, transcribes to text using Whisper                 |
 | **Data Storage**     | JSON (via `storage.py`)                                       | Logs mode, user input, AI responses, and message source                     |
 | **Environment Config**| python-dotenv                                                 | Loads environment variables securely from `.env`                            |
-| **Deployment**       | Render.com (optional)                                         | Deploy as a background worker for continuous availability                   |
+| **Deployment**       | Render.com (to be upgraded)                                   | Deploy as a background worker for continuous availability                   |
 
 
 ---
