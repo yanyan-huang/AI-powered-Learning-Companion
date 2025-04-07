@@ -1,49 +1,26 @@
+# ai.py - Modular LLM router using LangChain with per-user model and conversation memory
 
-# ai.py - Modular LLM router using LangChain with per-user conversation memory
-
-from config import AI_PROVIDER, OPENAI_API_KEY, CLAUDE_API_KEY, GOOGLE_API_KEY # Load API keys and provider
+from config import AI_PROVIDER, OPENAI_API_KEY, CLAUDE_API_KEY, GOOGLE_API_KEY
+from config import AVAILABLE_MODELS  # Optional: for validation/debug
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain.schema import HumanMessage, SystemMessage
-import google.generativeai as genai  # Gemini SDK
+import google.generativeai as genai
 from prompts import MODE_PROMPTS
-
-# # DEBUGGING: Print gemini models
-# genai.configure(api_key=GOOGLE_API_KEY)
-
-# print("Available Gemini models:")
-# for model in genai.list_models():
-#     print(f"- {model.name} | {model.supported_generation_methods}")
-
-# ================================= #
-#  Initialize LangChain LLM Clients #
-# ================================= #
-llms = {
-    "openai": ChatOpenAI(
-        openai_api_key=OPENAI_API_KEY,
-        model="gpt-4",
-        temperature=0
-    ),
-    "claude": ChatAnthropic(
-        anthropic_api_key=CLAUDE_API_KEY,
-        model="claude-3-7-sonnet-20250219"
-    )
-}
+from storage import get_user_model  # Fetches model per provider per user
 
 # ================================= #
 #  Memory for User Conversations    #
 # ================================= #
-# Stores conversation history by user_id and mode
-# Example: messages[user_id][mode] → List of message objects (System, Human, Assistant)
-messages = {} 
+messages = {}  # messages[user_id][mode] → LangChain message history
 
 # ================================ #
 #   Core Chat Function             #
 # ================================ #
 def chat_with_ai(user_id, user_input, mode):
     """
-    Route to appropriate LLM based on AI_PROVIDER and return AI response.
-    Handles memory per user and per mode.
+    Route user input to their selected LLM model and return the AI response.
+    Handles memory per user and per learning mode.
     """
     global messages
 
@@ -53,17 +30,20 @@ def chat_with_ai(user_id, user_input, mode):
     if mode not in MODE_PROMPTS:
         return "⚠️ Invalid mode. Please choose a valid mode."
 
-    # Special Gemini routing logic because Gemini does not fit so well into LangChain currently
-    if AI_PROVIDER == "gemini":
+    provider = AI_PROVIDER.lower()
+    model_name = get_user_model(user_id, provider)
+
+    # Special routing for Gemini
+    if provider == "gemini":
         genai.configure(api_key=GOOGLE_API_KEY)
-        model = genai.GenerativeModel("models/gemini-1.5-pro-latest")
+        model = genai.GenerativeModel(model_name)
         system_prompt = MODE_PROMPTS[mode]
 
-        # Rebuild conversation history into flat string
+        # Build conversation history into plain string prompt
         conversation_history = ""
         if user_id in messages and mode in messages[user_id]:
             for msg in messages[user_id][mode]:
-                prefix = "User" if msg.type == "human" else "Assistant"
+                prefix = "User" if isinstance(msg, HumanMessage) else "Assistant"
                 conversation_history += f"{prefix}: {msg.content}\n"
 
         prompt = f"{system_prompt}\n\n{conversation_history}User: {user_input}"
@@ -74,7 +54,7 @@ def chat_with_ai(user_id, user_input, mode):
         except Exception as e:
             ai_reply = f"❌ Gemini error: {str(e)}"
 
-        # Track memory even for Gemini
+        # Track memory
         if user_id not in messages:
             messages[user_id] = {}
         if mode not in messages[user_id]:
@@ -85,11 +65,18 @@ def chat_with_ai(user_id, user_input, mode):
 
         return ai_reply
 
-    # Default LangChain LLM path (OpenAI, Claude, etc.)
-    llm = llms.get(AI_PROVIDER.lower())
-    if not llm:
-        return f"⚠️ Unsupported AI provider: {AI_PROVIDER}"
+    # Handle OpenAI or Claude via LangChain
+    try:
+        if provider == "openai":
+            llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=model_name)
+        elif provider == "claude":
+            llm = ChatAnthropic(anthropic_api_key=CLAUDE_API_KEY, model=model_name)
+        else:
+            return f"⚠️ Unsupported provider: {provider}"
+    except Exception as e:
+        return f"❌ Error initializing model: {e}"
 
+    # Initialize user memory if not already
     if user_id not in messages:
         messages[user_id] = {}
     if mode not in messages[user_id]:
@@ -110,7 +97,7 @@ def chat_with_ai(user_id, user_input, mode):
 # ================================= #
 def switch_mode(user_id, mode):
     """
-    Switch the AI mode for the user and clear previous conversation history.
+    Reset conversation for a selected mode.
     """
     global messages
     if mode in MODE_PROMPTS:

@@ -1,8 +1,7 @@
 from config import TELEGRAM_API_TOKEN  # Load Telegram API token from config
 from telegram.ext import Application, CommandHandler, MessageHandler, filters  # Telegram bot framework for handling commands and messages
 from handlers import text_message, change_mode, voice_message  # Import all handlers
-from handlers import start, help_command  # Import new start function
-
+from handlers import start, help_command, set_model, show_model  # Import new start function
 # ======================== #
 #  Initialize Telegram Bot #
 # ======================== #
@@ -27,11 +26,18 @@ application.add_handler(CommandHandler("mode", lambda update, context: change_mo
 # Command Handler: Handles the "/help" command to provide guidance on using the bot
 application.add_handler(CommandHandler("help", help_command))
 
+# Command Handler: Handles the "/set_modl" command to set the user's model
+application.add_handler(CommandHandler("set_model", lambda update, context: set_model(update, context)))
+
+# Command Handler: Handles the "/model" command to show the user's selected model
+application.add_handler(CommandHandler("model", lambda update, context: show_model(update, context)))
+
 # Message Handler: Processes regular text messages (excluding commands) and generates AI responses
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, lambda update, context: text_message(update, context, user_modes)))
 
 # Message Handler: Processes voice messages, transcribes them, and sends them to AI
 application.add_handler(MessageHandler(filters.VOICE, lambda update, context: voice_message(update, context, user_modes)))
+
 
 # ======================= #
 #  Start Telegram Bot     #

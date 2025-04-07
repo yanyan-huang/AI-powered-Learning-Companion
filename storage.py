@@ -2,6 +2,8 @@ import json
 import os
 from datetime import datetime
 
+from config import DEFAULT_MODEL, AI_PROVIDER, AVAILABLE_MODELS
+
 # ================================ #
 #  Directory for Saving User Data  #
 # ================================ #
@@ -112,3 +114,55 @@ def log_interaction(user_id, user_input, ai_response, input_source="text", mode=
     """
     add_to_history(user_id, user_input, role="user", source=input_source, mode=mode)
     add_to_history(user_id, ai_response, role="assistant", source="text", mode=mode)
+
+# ================================ #
+#  Load and Save Model Selection   #
+# ================================ #
+def set_user_model(user_id, provider, model_name):
+    """
+    Save the selected model under the specified provider for the user.
+
+    Args:
+        user_id: Telegram user ID
+        provider: LLM provider (e.g., "openai")
+        model_name: Model name (e.g., "gpt-4")
+    """
+    if provider not in AVAILABLE_MODELS:
+        raise ValueError(f"⚠️ Unsupported provider: {provider}")
+    if model_name not in AVAILABLE_MODELS[provider]:
+        raise ValueError(f"⚠️ Invalid model '{model_name}' for provider '{provider}'.")
+
+    data = load_user_data(user_id)
+    data["model"] = {
+        "provider": provider,
+        "model_name": model_name
+    }
+    save_user_data(user_id, data)
+
+def get_user_model(user_id, provider):
+    """
+    Retrieve the selected model for a specific provider for a user.
+    Falls back to default model if not set.
+    Args:
+        user_id: Telegram user ID
+        provider: AI provider (e.g., "openai", "claude", "gemini")
+    Returns:
+        str: The model name selected by the user or the default model
+    """
+    
+    data = load_user_data(user_id)
+    user_models = data.get("model", {})
+    return user_models.get(provider, AVAILABLE_MODELS[provider][0])  # Default to first model
+
+def get_active_provider(user_id):
+    """
+    Retrieve the active AI provider for a user.
+    Args:
+        user_id: Telegram user ID
+    Returns:
+        str: The AI provider selected by the user or the default provider
+    """
+    data = load_user_data(user_id)
+    model_info = data.get("model", {})
+    return model_info.get("provider", AI_PROVIDER)
+

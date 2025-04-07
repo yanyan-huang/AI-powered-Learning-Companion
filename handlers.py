@@ -4,8 +4,9 @@ from telegram import Update # Handles updates (messages, commands) from Telegram
 from moviepy.editor import AudioFileClip  # Handles audio file processing (converting voice messages)
 from greetings import GREETINGS # Import greeting messages for different modes
 from openai import OpenAI  # For Whisper speech-to-text
-from config import OPENAI_API_KEY # Import OpenAI API key for Whisper
-from storage import set_mode, log_interaction # Import functions to manage user data and session state
+from config import OPENAI_API_KEY, AVAILABLE_MODELS # Import OpenAI API key for Whisper & available models for validation
+from storage import set_user_model, get_user_model, get_active_provider, log_interaction # Import functions to manage user data and session state
+
 
 client = OpenAI(api_key=OPENAI_API_KEY) # Initialize OpenAI client for Whisper API
 
@@ -103,7 +104,7 @@ async def change_mode(update: Update, context, user_modes):
 
     # store selected mode for the user
     user_modes[user_id] = mode_choice
-    set_mode(user_id, mode_choice)  # Save the selected mode to user data
+    set_model(user_id, mode_choice)  # Save the selected mode to user data
     
     await update.message.reply_text(
         f"💡 *Mode switched to {mode_choice.capitalize()} Mode.*\n\n{GREETINGS[mode_choice]}",
@@ -185,3 +186,51 @@ async def voice_message(update: Update, context, user_modes):
     # add_transcript(user_id, transcript)
     # store the interaction in history
     log_interaction(user_id, transcript, ai_response, input_source="transcript") # add_to_history(user_id, transcript)
+
+# =============================== #
+#  Command Handling - Set Model   #
+# =============================== #
+async def set_model(update: Update, context):
+    """
+    Set the AI model for the user.
+    Usage: /set_model [provider] [model_name]
+    """
+    print("set_model is working!!!")
+    user_id = update.message.chat_id
+
+    if len(context.args) < 2:
+        await update.message.reply_text("❗ Usage: /set_model [provider] [model_name]")
+        return
+
+    provider, model_name = context.args[0].lower(), context.args[1]
+
+    # Validate input
+    if provider not in AVAILABLE_MODELS:
+        await update.message.reply_text(f"⚠️ Unsupported provider: {provider}")
+        return
+    if model_name not in AVAILABLE_MODELS[provider]:
+        await update.message.reply_text(f"⚠️ Invalid model for {provider}. Options: {', '.join(AVAILABLE_MODELS[provider])}")
+        return
+
+    set_user_model(user_id, provider, model_name)
+    await update.message.reply_text(f"✅ Model updated: {provider} → {model_name}")
+
+
+
+# =============================== #
+#  Command Handling - Show Model  #
+# =============================== #
+async def show_model(update, context):
+    """ 
+    Show the current model and provider being used by the user.
+    """     
+    user_id = update.message.chat_id
+    provider = get_active_provider(user_id)  # ← gets the saved provider
+    model_name = get_user_model(user_id, provider)  # ← gets model name based on saved provider
+    
+    await update.message.reply_text(
+        f"You're currently using:\n\n"
+        f"• Provider: *{provider.capitalize()}*\n"
+        f"• Model: `{model_name}`",
+        parse_mode="Markdown"
+    )
