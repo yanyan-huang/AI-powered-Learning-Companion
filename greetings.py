@@ -2,7 +2,7 @@
 GREETINGS = {
     "mentor": (
         "👋 Hi! I’m your AI Mentor. Whether you're an aspiring PM or switching careers, "
-        "I'm here to help you clarify your goals and craft a career path that aligns with your strengths and ambitions!\n"
+        "I'm here to help you clarify your goals and craft a career path that aligns with your strengths and ambitions! 🚀\n"
     ),
     "coach": (
         "👋 Hi there! I'm your Product Coach — ready to help you master PM fundamentals and build real product skills through hands-on case studies and active learning!\n\n"
