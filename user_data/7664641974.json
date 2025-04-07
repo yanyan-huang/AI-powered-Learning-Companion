@@ -346,6 +346,66 @@
       "content": "Perfect, I'll provide feedback at the end of the interview. Let's get started.\n\nQuestion 1: Tell me about a time you managed a conflict within a team.",
       "timestamp": "2025-04-07T18:30:40.731889",
       "source": "text"
+    },
+    {
+      "role": "user",
+      "content": "1",
+      "timestamp": "2025-04-07T19:38:29.442517",
+      "source": "text"
+    },
+    {
+      "role": "assistant",
+      "content": "Great, you've chosen the Initial Phone Screen interview. This type of interview typically covers your background, motivation, and general problem-solving approach. \n\nBefore we start, would you prefer to receive feedback after each question or at the end of the interview?",
+      "timestamp": "2025-04-07T19:38:29.444997",
+      "source": "text"
+    },
+    {
+      "role": "user",
+      "content": "After each question, please.",
+      "timestamp": "2025-04-07T19:38:45.559650",
+      "source": "transcript"
+    },
+    {
+      "role": "assistant",
+      "content": "Perfect, I'll provide feedback after each question. Let's get started.\n\nQuestion 1: \"Tell me about yourself and your background.\"",
+      "timestamp": "2025-04-07T19:38:45.561907",
+      "source": "text"
+    },
+    {
+      "role": "user",
+      "content": "Hi, so I'm an aspiring product manager with a unique combination of CS background and communication skills, communication experience and language education experience. I see myself translation between the two different set of world, the technical part and the non-technical people side. So that's why I'm here for this product manager role in your company and I'm excited to bring my value to your company and contribute to the overall well-being of the team.",
+      "timestamp": "2025-04-07T19:39:48.096176",
+      "source": "transcript"
+    },
+    {
+      "role": "assistant",
+      "content": "Your score: **7/10**. Here is the breakdown:\n\n\u2705 **Strengths:** \n- You did a good job of highlighting your unique combination of technical and communication skills. \n- You also clearly communicated your motivation for the role and how you see yourself fitting into the team.\n\n\u26a0\ufe0f **Weaknesses:** \n- Your response lacked specific examples or experiences that demonstrate your skills and qualifications. \n- You didn't mention any specific achievements or projects that you've worked on.\n\n\ud83d\ude80 **Actionable Improvement:** \n- Try to include specific examples or experiences that demonstrate your skills and qualifications. For example, you could talk about a project you worked on that required both technical and communication skills. \n- Also, try to mention any specific achievements or successes you've had in your career so far.\n\nNow, let's move on to the next question: \"Why do you want to be a Product Manager at [Company X]?\"",
+      "timestamp": "2025-04-07T19:39:48.103166",
+      "source": "text"
+    },
+    {
+      "role": "user",
+      "content": "Yeah, I see that Google has a wide span of great, best products in the world, so that's why I'm excited to be a part of this endeavor, and specifically, I know that Google has projects related to language education and edtech, so this is the area I'm particularly interested in, and I have experience building edtech products, like my recent PM project, which is an AI power learning companion for aspiring tech talents, incorporating edtech techniques and language or education approaches into it. Besides that, I also have a unique background in linguistics and language education, which makes me a perfect candidate in those teams, so that's why I'm here. Thank you.",
+      "timestamp": "2025-04-07T19:41:30.566269",
+      "source": "transcript"
+    },
+    {
+      "role": "assistant",
+      "content": "Your score: **8/10**. Here is the breakdown:\n\n\u2705 **Strengths:** \n- You did a great job of aligning your interests and experiences with the company's focus areas. \n- You provided a specific example of a project you've worked on that is relevant to the role you're applying for. \n- You also clearly communicated your enthusiasm for the company and its products.\n\n\u26a0\ufe0f **Weaknesses:** \n- While you mentioned your unique background in linguistics and language education, you didn't explain how these skills would benefit the company or the role you're applying for.\n- You could have been more specific about why you want to work at Google, beyond the fact that they have \"great, best products in the world\".\n\n\ud83d\ude80 **Actionable Improvement:** \n- Try to explain how your unique skills and experiences would benefit the company or the role you're applying for. For example, you could talk about how your background in linguistics and language education could help improve Google's language education products.\n- Also, try to be more specific about why you want to work at the company. For example, you could talk about a specific product or initiative at Google that you're excited about.\n\nNow, let's move on to the next question: \"Walk me through a product you have worked on and the impact it had.\"",
+      "timestamp": "2025-04-07T19:41:30.569177",
+      "source": "text"
+    },
+    {
+      "role": "user",
+      "content": "Let's end it here",
+      "timestamp": "2025-04-07T19:42:55.695346",
+      "source": "transcript"
+    },
+    {
+      "role": "assistant",
+      "content": "Absolutely, we can wrap up here. \n\nRemember, practice is key to mastering PM interviews. You're doing great, and with each practice session, you're building your product intuition and confidence. \n\nWould you like to try another interview type, revisit a specific question, or head to Coach Mode to break down product concepts further? Or if you're done for now, that's perfectly fine too. \n\nKeep going \u2014 you've got this!",
+      "timestamp": "2025-04-07T19:42:55.698513",
+      "source": "text"
     }
   ]
 }
