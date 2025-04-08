@@ -28,7 +28,7 @@ os.makedirs(USER_DATA_DIR, exist_ok=True)
 
 class BotUser:
     def __init__(self, user_id):
-        """Initialize the BotUser with a user ID and load user data."""
+        """Initialize the BotUser with a user ID and load user data from disk."""
         self.user_id = str(user_id)
         self.filepath = os.path.join(USER_DATA_DIR, f"{self.user_id}.json")
         self.data = self._load_data()
@@ -39,10 +39,14 @@ class BotUser:
             with open(self.filepath, "r") as f:
                 return json.load(f)
         else:
-            return {"mode": None, "memory": {}, "history": []}
+            return {
+                "mode": None,       # Current user mode (e.g., "coach")
+                "memory": {},       # Dict of {mode: [message1, message2, ...]}
+                "history": []       # Flat list of all interactions
+            }
 
     def save(self):
-        """Save user data to a JSON file."""
+        """Persist user data (mode, memory, history) to a JSON file on disk."""
         with open(self.filepath, "w") as f:
             json.dump(self.data, f, indent=2)
 
@@ -53,16 +57,22 @@ class BotUser:
 
     @mode.setter
     def mode(self, value):
-        """Set the current mode of the user and save the data."""
+        """Setter for user mode. Updates in-memory and on-disk."""
         self.data["mode"] = value
         self.save()
 
     def get_memory(self):
-        """Get the memory for the current mode."""
+        """
+        Retrieve the user's conversational memory (used for LLM context).
+        Format: {mode: [BaseMessage, BaseMessage, ...]}
+        """
         return self.data.get("memory", {})
 
     def update_memory(self, mode, memory):
-        """Update the memory for the current mode and save the data."""
+        """
+        Update and persist the memory used to construct prompts for the LLM.
+        Each message must be serialized so it's JSON-safe.
+        """
         # Serialize messages to dicts
         serializable_memory = {}
         for m, messages in memory.items():
@@ -74,7 +84,10 @@ class BotUser:
         self.save()
 
     def log_interaction(self, user_input, ai_reply, source="text"):
-        """Log the interaction with a timestamp and source."""
+        """
+        Log a user interaction into the persistent history log.
+        Includes user and assistant messages, timestamp, and source (text/voice).
+        """
         timestamp = datetime.utcnow().isoformat()
         self.data["history"].append({"role": "user", "content": user_input, "timestamp": timestamp, "source": source, "mode": self.mode})
         self.data["history"].append({"role": "assistant", "content": ai_reply, "timestamp": timestamp, "source": "text", "mode": self.mode})
