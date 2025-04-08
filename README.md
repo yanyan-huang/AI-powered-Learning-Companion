@@ -37,16 +37,23 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 ## 📂 **Folder Structure**
 ```
 /Project_directory
-│─ telegram_bot.py     # Main bot entry point (loads handlers) for Telegram bot interactions
-│─ handlers.py         # Handles text messages, mode switching, and voice processing
-│─ ai.py               # Core AI logic for processing messages & LLM routing (OpenAI, Claude, Gemini) 
-│─ storage.py         # User history tracking + mode/session saving 
-│─ config.py           # Stores API keys & environment variables
-│─ prompts.py          # Stores AI prompts tailored for different modes
+│
+├── telegram_bot.py               # 🔹 Main entry point — sets up and runs the Telegram bot
+├── handlers.py                   # 🔹 Handles /start, /help, /mode, text, and voice messages
+│
+├── bot_user.py                   # 🧠 Manages user session data, mode, memory, and interaction logging
+├── conversation_manager.py       # 🧠 Coordinates user input, mode switching, and LLM response
+├── llm_router.py                 # 🧠 Routes requests to OpenAI, Claude, or Gemini (via LangChain or Gemini API)
+│
+├── prompts.py                    # 📋 Prompt templates for mentor, coach, interviewer modes
+├── greetings.py                  # 📋 Greeting messages for each mode
+│
+├── config.py                     # ⚙️ Loads environment variables and API key validations
 │─ data/
 │  └── user_history.json  # Local user history
-│─ requirements.txt  # (Optional) Dependencies
-│─ .env              # (Optional) Environment variables file
+├── README.md                     # 📖 Project overview and usage instructions
+│─ requirements.txt               # 📦 (Optional) Dependencies
+│─ .env                           # 🔐 (Optional) Environment variables file
 ```
 
 ---
