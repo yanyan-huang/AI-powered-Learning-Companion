@@ -5,14 +5,23 @@ from langchain.schema import BaseMessage
 # ======================== #
 #  Bot User Class        #
 # ======================== #
-# This class handles user data, including mode, memory, and interaction history.
-# It loads and saves user data to a JSON file, allowing for persistent storage.
-# The class is initialized with a user ID and manages the user's mode and memory.
-# It also logs interactions with timestamps and sources.
-# The class is designed to be used in a Telegram bot context, where user data needs to be stored and retrieved.
-# It creates a directory for user data if it doesn't exist and handles loading and saving of user data.
-# It raises errors if the user ID is invalid or if there are issues with file operations.
-# It provides methods for getting and updating memory, logging interactions, and managing the user's mode.
+# This class encapsulates all state and behavior related to a specific user.
+# It handles:
+#   - Mode: Current active learning mode (mentor, coach, interviewer)
+#   - Memory: The latest relevant turn-by-turn conversation used as context for the LLM
+#   - History: A full, serialized log of all inputs/outputs (for review, analytics, future personalization)
+#
+# MEMORY vs. HISTORY (Key Design Difference)
+# -------------------------------------------
+# `memory` is used to construct prompts for LLMs (OpenAI, Gemini, Claude).
+# It contains only recent, relevant messages in a format expected by LangChain or OpenAI APIs.
+# Stored as `BaseMessage` objects, often trimmed to stay within token limits.
+#
+# `history` stores the full transcript of the conversation — every message, from both user and assistant.
+# It includes timestamps, message roles, sources (text/voice), and mode context.
+# Useful for logging, replaying, and analyzing conversations.
+#
+# This class ensures both are written to disk under a per-user JSON file inside `user_data/`.
 
 USER_DATA_DIR = "user_data"
 os.makedirs(USER_DATA_DIR, exist_ok=True)
