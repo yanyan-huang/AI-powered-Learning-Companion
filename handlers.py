@@ -1,11 +1,14 @@
-from ai import chat_with_ai  # Import AI functions using LangChain-based router for chat and mode switching
+
 from telegram.constants import ParseMode # Constants for text formatting in Telegram messages
 from telegram import Update # Handles updates (messages, commands) from Telegram users
 from moviepy.editor import AudioFileClip  # Handles audio file processing (converting voice messages)
 from greetings import GREETINGS # Import greeting messages for different modes
 from openai import OpenAI  # For Whisper speech-to-text
 from config import OPENAI_API_KEY # Import OpenAI API key for Whisper
-from storage import set_mode, log_interaction # Import functions to manage user data and session state
+
+from llm_router import LLMRouter
+from conversation_manager import ConversationManager
+from bot_user import BotUser 
 
 client = OpenAI(api_key=OPENAI_API_KEY) # Initialize OpenAI client for Whisper API
 
@@ -25,15 +28,13 @@ async def greet_user(update):
 # ======================================= #
 # Helper Function: Ensure Mode Selected #
 # ======================================= #
-async def ensure_mode_selected(update, user_modes):
+async def ensure_mode_selected(update, user):
     """
     Checks if the user has selected a mode. 
     If not, sends a reminder and stops further execution.
     Returns True if mode is missing, otherwise False.
     """
-    user_id = update.message.chat_id
-
-    if user_modes.get(user_id) is None:
+    if not user.mode:
         await update.message.reply_text(
             "🎯 **Ready to dive in? Choose a mode to tailor your learning experience today!**\n\n"
             " **💡`/mode mentor`** for career advice & learning paths.\n"
@@ -43,22 +44,20 @@ async def ensure_mode_selected(update, user_modes):
             parse_mode="Markdown"
         )
         return True  # Indicates that the mode is missing
-
     return False  # Mode is set, continue processing
 
 # =============================== #
 #  Command Handling - Start       #
 # =============================== # 
-async def start(update, context, user_modes):
+async def start(update, context):
     """
     Handles the /start command: greets the user and resets their mode.
     """
     user_id = update.message.chat_id
-    user_modes[user_id] = None  # Reset mode on /start
-
-    await greet_user(update)  # Call the greeting function
-    await ensure_mode_selected(update, user_modes)  # Ask user to select a mode
-
+    user = BotUser(user_id)
+    user.mode = None
+    await greet_user(update)
+    await ensure_mode_selected(update, user)
 
 # =============================== #
 #  Command Handling - Help         #
@@ -83,11 +82,14 @@ async def help_command(update: Update, context):
 #  Command Handling - Mode Switching #
 # ================================== #
 
-async def change_mode(update: Update, context, user_modes):
+async def change_mode(update: Update, context):
     """
     Handle /mode command and update mode for the specific user.
     """
     user_id = update.message.chat_id
+    user = BotUser(user_id)
+    router = LLMRouter()
+    manager = ConversationManager(user, router)
 
     #  validate user input for mode change 
     if not context.args:
@@ -101,10 +103,8 @@ async def change_mode(update: Update, context, user_modes):
         await update.message.reply_text("Please choose `/mode mentor`, `/mode coach`, or `/mode interviewer`.")
         return
 
-    # store selected mode for the user
-    user_modes[user_id] = mode_choice
-    set_mode(user_id, mode_choice)  # Save the selected mode to user data
-    
+    #  Switch mode and update user data
+    result = manager.switch_mode(mode_choice)
     await update.message.reply_text(
         f"💡 *Mode switched to {mode_choice.capitalize()} Mode.*\n\n{GREETINGS[mode_choice]}",
         parse_mode=ParseMode.MARKDOWN
@@ -115,41 +115,41 @@ async def change_mode(update: Update, context, user_modes):
 #  Message Handling - Text Input  #
 # =============================== #
 
-async def text_message(update: Update, context, user_modes):
+async def text_message(update: Update, context):
     """
     Handle incoming text messages and generate AI responses.
     If no mode is selected, reminds the user to choose one.
     """
     user_id = update.message.chat_id
     user_input = update.message.text.strip().lower()
+    user = BotUser(user_id)
 
     # Use helper function to ensure user selects a mode first
-    if await ensure_mode_selected(update, user_modes):
+    if await ensure_mode_selected(update, user):
         return  # Exit early if mode is missing
 
-    #  Generate AI Response Based on Mode #
-    ai_response = chat_with_ai(user_id, user_input, user_modes[user_id])
-
-    # log user input to history (JSON storage)
-    log_interaction(user_id, user_input, ai_response, input_source="text") # add_to_history(user_id, user_input)
+    router = LLMRouter()
+    manager = ConversationManager(user, router)
+    ai_response = manager.process_input(user_input)
 
     await update.message.reply_text(
-        f"🤖 *PM Pal:* {ai_response}", 
-        parse_mode=ParseMode.MARKDOWN # ParseMode.HTML
+        f"🤖 *PM Pal:* {ai_response}",
+        parse_mode=ParseMode.MARKDOWN
     )
 
 # =============================== #
 #  Message Handling - Voice Input #
 # =============================== #
 
-async def voice_message(update: Update, context, user_modes):
+async def voice_message(update: Update, context):
     """
     Handle voice messages: download, convert, transcribe, and process them with AI.
     """
     user_id = update.message.chat_id
+    user = BotUser(user_id)
 
     # Use helper function to ensure user selects a mode first
-    if await ensure_mode_selected(update, user_modes):
+    if await ensure_mode_selected(update, user):
         return  # Exit early if mode is missing
 
     await update.message.reply_text("🎙️ Processing voice message...")
@@ -178,10 +178,7 @@ async def voice_message(update: Update, context, user_modes):
     await update.message.reply_text(f"🎙️ *You:* _{transcript}_", parse_mode=ParseMode.MARKDOWN)
 
     # Generate AI response
-    ai_response = chat_with_ai(user_id, transcript, user_modes[user_id])
+    router = LLMRouter()
+    manager = ConversationManager(user, router)
+    ai_response = manager.process_input(transcript, source="voice")
     await update.message.reply_text(f"🤖 *PM Pal:* {ai_response}", parse_mode=ParseMode.MARKDOWN)
-
-    # # Store the transcript in user data
-    # add_transcript(user_id, transcript)
-    # store the interaction in history
-    log_interaction(user_id, transcript, ai_response, input_source="transcript") # add_to_history(user_id, transcript)
