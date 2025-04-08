@@ -57,11 +57,59 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 │
 ├── config.py                     # ⚙️ Loads environment variables and API key validations
 │─ data/
-│  └── user_history.json  # Local user history
+│  └── user_history.json          # Local user history
 ├── README.md                     # 📖 Project overview and usage instructions
 │─ requirements.txt               # 📦 (Optional) Dependencies
 │─ .env                           # 🔐 (Optional) Environment variables file
 ```
+
+---
+## 🧠 How Memory vs. History Work
+
+To support high-quality, context-aware conversations and long-term user insights, the bot stores two types of conversational data: `memory` and `history`. Here's how they differ:
+
+### 📊 Architecture Diagram
+
+```
+                          ┌────────────────────────────┐
+                          │     Telegram Input         │
+                          └────────────┬───────────────┘
+                                       ▼
+                                ┌─────────────┐
+                                │ handlers.py │
+                                └─────┬───────┘
+                                      ▼
+                            ┌──────────────────────┐
+                            │ ConversationManager  │
+                            └─────┬──────────┬──────┘
+                                  ▼          ▼
+                          ┌────────────┐  ┌────────────┐
+                          │   memory   │  │  history   │
+                          │ (per mode) │  │ (all msgs) │
+                          └────┬───────┘  └────┬───────┘
+                               │               │
+         ┌─────────────────────┘               └────────────────────┐
+         ▼                                                        ▼
+┌────────────────┐                                  ┌────────────────────────────┐
+│  LLMRouter.py  │◀──────── Uses memory only ──────▶│  Not involved in response  │
+└────────────────┘                                  └────────────────────────────┘
+```
+
+### 🧠 `memory` vs `history`
+
+| Feature             | `memory`                             | `history`                            |
+|--------------------|---------------------------------------|--------------------------------------|
+| **What it stores** | A few recent messages (context stack) | All user-assistant messages          |
+| **Used by LLM?**   | ✅ Yes – LLM reads from it            | ❌ No – for logs only                 |
+| **Format**         | LangChain-style `Message` objects     | JSON with role, timestamp, source    |
+| **Scope**          | Per-mode (`mentor`, `coach`, etc.)    | Cumulative, all sessions             |
+| **Token-limited?** | ✅ Yes (trimmed for LLMs)             | ❌ No                                |
+| **Purpose**        | Maintain coherent conversation context| Track usage, behavior, feedback, etc.|
+| **Updated by**     | `ConversationManager`                 | `BotUser`                            |
+
+Including both gives the bot:
+- A **short-term memory** for smart replies
+- A **long-term history** for insights, logging, and potential analytics
 
 ---
 
