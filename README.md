@@ -33,14 +33,6 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 
 
 ---
-## 🧠 Architecture Highlights
-
-- **ConversationManager** ties together `BotUser` (user state) and `LLMRouter` (LLM output).
-- **Handlers** manage command input and delegate to `ConversationManager`.
-- **LLMRouter** dynamically switches between OpenAI, Claude, and Gemini.
-- **BotUser** tracks mode, memory, and history per user.
-
----
 ## 📂 **Folder Structure**
 ```
 /Project_directory
@@ -61,6 +53,59 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 ├── README.md                     # 📖 Project overview and usage instructions
 │─ requirements.txt               # 📦 (Optional) Dependencies
 │─ .env                           # 🔐 (Optional) Environment variables file
+```
+
+---
+## 🧠 Architecture Highlights
+
+- **ConversationManager** ties together `BotUser` (user state) and `LLMRouter` (LLM output).
+- **Handlers** manage command input and delegate to `ConversationManager`.
+- **LLMRouter** dynamically switches between OpenAI, Claude, and Gemini.
+- **BotUser** tracks mode, memory, and history per user.
+
+Below diagram illustrates how the PM Pal Telegram bot orchestrates input handling, AI routing, memory management, and LLM response generation through a clean object-oriented architecture.
+
+```
+                 +--------------------+
+                 |   Telegram User    |
+                 +---------+----------+
+                           |
+                           v
+            +------------------------------+
+            |       telegram_bot.py        |
+            |  (Bot App & Command Routing) |
+            +------+-----------------------+
+                   |
+       +-----------+------------+
+       |                        |
+       v                        v
++---------------+     +------------------+
+| CommandHandler|     | MessageHandler   |
+| (/start, /help)|    | (text / voice)   |
++-------+-------+     +---------+--------+
+        |                         |
+        v                         v
++-----------------+     +---------------------+
+|   handlers.py   | <--> | ConversationManager |
++-----------------+     +----------+----------+
+                                   |
+       +---------------------------+--------------------------+
+       |                                                      |
+       v                                                      v
++--------------+                                     +-----------------+
+|   BotUser    |                                     |   LLMRouter     |
+| (Tracks mode,|                                     | (LLM responses  |
+|  memory,     |                                     |  via OpenAI,    |
+|  history)    |                                     |  Claude, Gemini)|
++--------------+                                     +-----------------+
+       |                                                      |
+       |                                              +------------------+
+       |                                              |    prompts.py    |
+       v                                              +------------------+
++--------------------+                               | Mode-specific    |
+| user_data/*.json   | <-----------------------------+ system prompts   |
+| (memory + history) |
++--------------------+
 ```
 
 ---
