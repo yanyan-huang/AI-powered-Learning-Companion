@@ -1,4 +1,4 @@
-# AI-Powered Learning Companion (for Product Management) 🎓 🚀
+# AI-Powered Learning Companion (for Tech Talents) 🎓 🚀
 
 ## 📌 Overview  
 This **AI-powered learning companion** provides **mentorship, tutoring, and mock interview coaching** for **aspiring and transitioning Product Managers**. It leverages AI to offer **structured learning paths, real-time feedback, and interactive interview practice** via **Telegram**.
