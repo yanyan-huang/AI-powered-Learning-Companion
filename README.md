@@ -10,7 +10,7 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 👉 **Telegram Bot** – Users interact with the AI directly via Telegram, with text and voice support.  
 👉 **Flexible LLM routing**: Switchable LLM providers — OpenAI (primary), Claude, Gemini (via config)  
 👉 **Multimodal input**: Text and voice (speech-to-text via Whisper)  
-👉 **Session Logging** – Automatically saves user input + AI responses by mode and source in JSON.  
+👉 **Session Logging** Logs user history (text & voice) by mode  
 
 ## 🚀 Future Exploration  
 🔜 **Web UI** – Extend interaction beyond Telegram via a simple chat interface (React + Flask).     
@@ -33,7 +33,14 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 
 
 ---
+## 🧠 Architecture Highlights
 
+- **ConversationManager** ties together `BotUser` (user state) and `LLMRouter` (LLM output).
+- **Handlers** manage command input and delegate to `ConversationManager`.
+- **LLMRouter** dynamically switches between OpenAI, Claude, and Gemini.
+- **BotUser** tracks mode, memory, and history per user.
+
+---
 ## 📂 **Folder Structure**
 ```
 /Project_directory
