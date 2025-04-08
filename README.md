@@ -63,6 +63,7 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 - **LLMRouter** dynamically switches between OpenAI, Claude, and Gemini.
 - **BotUser** tracks mode, memory, and history per user.
 
+### 📊 Architecture Diagram
 Below diagram illustrates how the PM Pal Telegram bot orchestrates input handling, AI routing, memory management, and LLM response generation through a clean object-oriented architecture.
 
 ```
@@ -113,7 +114,6 @@ Below diagram illustrates how the PM Pal Telegram bot orchestrates input handlin
 
 To support high-quality, context-aware conversations and long-term user insights, the bot stores two types of conversational data: `memory` and `history`. Here's how they differ:
 
-### 📊 Architecture Diagram
 
 ```
                           ┌────────────────────────────┐
