@@ -37,4 +37,8 @@ class ConversationManager:
         ai_reply, updated_memory = self.router.get_response(self.user.user_id, user_input, mode, memory)
         self.user.update_memory(mode, updated_memory)
         self.user.log_interaction(user_input, ai_reply, source=source)
+
+        # ✅ Add this line to log a metric event
+        self.user.log_metric_event()      
+          
         return ai_reply

@@ -34,8 +34,6 @@ class BotUser:
         """Initialize the BotUser with a user ID and Firebase Firestore document reference."""
         self.user_id = str(user_id)
         self.doc_ref = db.collection("users").document(self.user_id)
-        # self.filepath = os.path.join(USER_DATA_DIR, f"{self.user_id}.json")
-        # self.data = self._load_data()
 
     def _load_or_init_profile(self):
         """Load or initialize the user profile in Firestore."""
@@ -47,30 +45,11 @@ class BotUser:
             })
         return self.doc_ref.get().to_dict()
     
-    # def _load_data(self):
-    #     """Load user data from a JSON file or create a new one if it doesn't exist."""
-    #     if os.path.exists(self.filepath):
-    #         with open(self.filepath, "r") as f:
-    #             return json.load(f)
-    #     else:
-    #         return {
-    #             "mode": None,       # Current user mode (e.g., "coach")
-    #             "memory": {},       # Dict of {mode: [message1, message2, ...]}
-    #             "history": []       # Flat list of all interactions
-    #         }
-
-    # def save(self):
-    #     """Persist user data (mode, memory, history) to a JSON file on disk."""
-    #     with open(self.filepath, "w") as f:
-    #         json.dump(self.data, f, indent=2)
-
     @property
     def mode(self):
         """Get the current mode of the user from the loaded profile in Firestore."""
         profile = self._load_or_init_profile()
         return profile.get("mode")
-        # """Get the current mode of the user."""
-        # return self.data.get("mode")
 
     @mode.setter
     def mode(self, value):
@@ -121,40 +100,14 @@ class BotUser:
         self.doc_ref.collection("history_logs").add(entry)
 
 
-    # @mode.setter
-    # def mode(self, value):
-    #     """Setter for user mode. Updates in-memory and on-disk."""
-    #     self.data["mode"] = value
-    #     self.save()
-
-    # def get_memory(self):
-    #     """
-    #     Retrieve the user's conversational memory (used for LLM context).
-    #     Format: {mode: [BaseMessage, BaseMessage, ...]}
-    #     """
-    #     return self.data.get("memory", {})
-
-    # def update_memory(self, mode, memory):
-    #     """
-    #     Update and persist the memory used to construct prompts for the LLM.
-    #     Each message must be serialized so it's JSON-safe.
-    #     """
-    #     # Serialize messages to dicts
-    #     serializable_memory = {}
-    #     for m, messages in memory.items():
-    #         serializable_memory[m] = [
-    #             {"type": msg.type, "content": msg.content} if isinstance(msg, BaseMessage) else msg
-    #             for msg in messages
-    #         ]
-    #     self.data["memory"] = serializable_memory
-    #     self.save()
-
-    # def log_interaction(self, user_input, ai_reply, source="text"):
-    #     """
-    #     Log a user interaction into the persistent history log.
-    #     Includes user and assistant messages, timestamp, and source (text/voice).
-    #     """
-    #     timestamp = datetime.utcnow().isoformat()
-    #     self.data["history"].append({"role": "user", "content": user_input, "timestamp": timestamp, "source": source, "mode": self.mode})
-    #     self.data["history"].append({"role": "assistant", "content": ai_reply, "timestamp": timestamp, "source": "text", "mode": self.mode})
-    #     self.save()
+    def log_metric_event(self, event_name="session_interaction"):
+        """
+        Save a minimal metric entry to Firestore.
+        Logs the user's current mode and timestamp.
+        """
+        print("📊 Logging minimal metric event to Firestore...")
+        self.doc_ref.collection("metrics").add({
+            "event": event_name,
+            "mode": self.mode,
+            "timestamp": datetime.utcnow().isoformat()
+        })
