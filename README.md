@@ -14,11 +14,11 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 👉 **Database Integration (Now Using Firestore)** – Scalable, structured storage of user state, memory snapshots, and full conversation history for for structured user data, analytics, and future feedback loops.  
 
 ## 🚀 Future Exploration
-🔜 **Cross-role Expansion** – Extend PM Pal into Tech Pal for other roles (e.g., UX, Data Science, Software Engineering).
-🔜 **Web UI** – Extend interaction beyond Telegram via a simple chat interface (React + Flask).  
-🔜 **LLM Contextual Refinement with RAG** – Evolve beyond copy-paste inputs by enabling file uploads (e.g., resumes, job descriptions) and integrating curated knowledge via Retrieval-Augmented Generation (RAG) to deliver more accurate, context-aware responses.
-🔜 **Data-Driven Feedback Engine** – Leverage Firestore logs to enable AI response evaluation, learning progress scoring, and personalized improvement tracking.  
-🔜 **Realtime Dashboards & Analytics** – Visualize user insights, usage patterns, and mode effectiveness for research and optimization.  
+🔜 **Cross-Role Expansion** – Grow PM Pal into Tech Pal to support other career tracks like UX Design, Data Science, and Software Engineering.  
+🔜 **Web Interface** – Make the bot accessible beyond Telegram through a browser-based UI (e.g., React + Flask).  
+🔜 **Smarter AI with File Uploads & RAG** – Move beyond copy-paste inputs by allowing users to upload resumes, job descriptions, or documents. Use Retrieval-Augmented Generation (RAG) to ground AI replies in real, personalized content.  
+🔜 **Data-Driven Feedback Engine** – Leverage Firestore logs to 1) evaluate AI response quality for product refinement, and 2) track user progress to deliver personalized feedback and learning insights.  
+🔜 **Dashboards & Insights** – Build visual dashboards to monitor usage trends, user engagement, and coaching effectiveness over time.
   
 ---
 
