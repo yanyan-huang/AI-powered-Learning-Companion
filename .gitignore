@@ -9,3 +9,6 @@
 __pycache__/
 *.pyc
 
+# Ignore firebase credentials
+firebase_creds.json
+
