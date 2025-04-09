@@ -10,12 +10,16 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 👉 **Telegram Bot** – Users interact with the AI directly via Telegram, with text and voice support.  
 👉 **Flexible LLM routing**: Switchable LLM providers — OpenAI (primary), Claude, Gemini (via config)  
 👉 **Multimodal input**: Text and voice (speech-to-text via Whisper)  
-👉 **Session Logging** Logs user history (text & voice) by mode  
+👉 **Session Logging** Logs user history (text & voice) by mode
+👉 **Database Integration (Now Using Firestore)** – Scalable, structured storage of user state, memory snapshots, and full conversation history for for structured user data, analytics, and future feedback loops.  
 
-## 🚀 Future Exploration  
-🔜 **Web UI** – Extend interaction beyond Telegram via a simple chat interface (React + Flask).     
-🔜 **Databased integration** – Replace local JSON files with a scalable solution (e.g., PostgreSQL or Firebase) for structured user data and analytics.    
-
+## 🚀 Future Exploration
+🔜 **Cross-role Expansion** – Extend PM Pal into Tech Pal for other roles (e.g., UX, Data Science, Software Engineering).
+🔜 **Web UI** – Extend interaction beyond Telegram via a simple chat interface (React + Flask).  
+🔜 **LLM Contextual Refinement with RAG** – Evolve beyond copy-paste inputs by enabling file uploads (e.g., resumes, job descriptions) and integrating curated knowledge via Retrieval-Augmented Generation (RAG) to deliver more accurate, context-aware responses.
+🔜 **Data-Driven Feedback Engine** – Leverage Firestore logs to enable AI response evaluation, learning progress scoring, and personalized improvement tracking.  
+🔜 **Realtime Dashboards & Analytics** – Visualize user insights, usage patterns, and mode effectiveness for research and optimization.  
+  
 ---
 
 ## 🔧 Tech Stack
@@ -27,7 +31,7 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 | **AI/LLM Integration** | LangChain, OpenAI (GPT-4), Anthropic (Claude), Google Gemini | Supports flexible routing to different LLM providers                        |
 | **Prompt Design**    | Custom system prompts (`prompts.py`)                          | Tailored instructions for mentor, coach, and interviewer modes              |
 | **Voice Support**    | MoviePy, OpenAI Whisper API                                   | Converts `.ogg` → `.mp3`, transcribes to text using Whisper                 |
-| **Data Storage**     | JSON (via `storage.py`)                                       | Logs mode, user input, AI responses, and message source                     |
+| **Data Storage**     | Firebase Firestore                                   | Stores user mode, memory, full conversation history (user input & AI response); supports future analytics and performance feedback |
 | **Environment Config**| python-dotenv                                                 | Loads environment variables securely from `.env`                            |
 | **Deployment**       | Render.com (to be upgraded)                                   | Deploy as a background worker for continuous availability                   |
 
@@ -48,11 +52,10 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 ├── greetings.py                  # 📋 Greeting messages for each mode
 │
 ├── config.py                     # ⚙️ Loads environment variables and API key validations
-│─ data/
-│  └── user_history.json          # Local user history
+├── firebase_db.py                 # Firebase Firestore setup for data storage
 ├── README.md                     # 📖 Project overview and usage instructions
-│─ requirements.txt               # 📦 (Optional) Dependencies
-│─ .env                           # 🔐 (Optional) Environment variables file
+├── requirements.txt               # 📦 (Optional) Dependencies
+├── .env                           # 🔐 (Optional) Environment variables file
 ```
 
 ---
