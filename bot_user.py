@@ -72,31 +72,54 @@ class BotUser:
         Update and persist the memory used to construct prompts for the LLM.
         Each message must be serialized so it's JSON-safe.
         """
-        # Serialize messages to dicts
-        messages = [
-            {"type": msg.type, "content": msg.content} if isinstance(msg, BaseMessage) else msg
-            for msg in memory.get(mode, [])
-        ]
+        messages = []
+        for msg in memory.get(mode, []):
+            if isinstance(msg, BaseMessage):
+                role = "user" if msg.type == "human" else msg.type  # Normalize 'human' → 'user'
+                messages.append({
+                    "role": role,  # ← explicitly renaming `type` → `role` as category
+                    "content": msg.content
+                })
+            elif isinstance(msg, dict) and "role" in msg:
+                messages.append(msg)
+
         self.doc_ref.collection("memory_snapshots").document(mode).set({
             "messages": messages,
             "updated_at": datetime.utcnow().isoformat()
         })
 
-    def log_interaction(self, user_input, ai_reply, source="text"):
+    def log_interaction(self, user_input, ai_reply, source="text", system_message=None):
         """
         Log a user interaction into the persistent history log in Firestore.
-        Includes user and assistant messages, timestamp, and source (text/voice).
+        Includes user and AI messages, timestamp, and source (text/voice).
+        - Optionally includes a system message
+        - Each message includes a role: 'system', 'user', or 'ai'
         """
-        # Create a new entry for the interaction
+        entries = []
+
+        if system_message:
+            entries.append({
+                "role": "system",
+                "content": system_message
+            })
+
+        entries.append({
+            "role": "user",
+            "content": user_input
+        })
+
+        entries.append({
+            "role": "ai",
+            "content": ai_reply
+        })
+
         entry = {
             "timestamp": datetime.utcnow().isoformat(),
             "mode": self.mode,
-            "source": source,
-            "entries": [
-                {"role": "user", "content": user_input},
-                {"role": "assistant", "content": ai_reply}
-            ]
+            "source": source,  # 'text' or 'voice'
+            "entries": entries
         }
+
         self.doc_ref.collection("history_logs").add(entry)
 
 

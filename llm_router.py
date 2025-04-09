@@ -25,7 +25,7 @@ class LLMRouter:
         self.llms = {
             "openai": ChatOpenAI(
                 openai_api_key=OPENAI_API_KEY,
-                model="gpt-4",
+                model="gpt-3.5-turbo", # 
                 temperature=0
             ),
             "claude": ChatAnthropic(
@@ -70,8 +70,8 @@ class LLMRouter:
         conversation_history = ""
         if mode in memory:
             for msg in memory[mode]:
-                prefix = "User" if msg.type == "human" else "Assistant"
-                conversation_history += f"{prefix}: {msg.content}\n"
+                prefix = msg["role"].capitalize()  # 'System', 'User', 'Ai'
+                conversation_history += f"{prefix}: {msg['content']}\n"
 
         prompt = f"{system_prompt}\n\n{conversation_history}User: {user_input}"
 
