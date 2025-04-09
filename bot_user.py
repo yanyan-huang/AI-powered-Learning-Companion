@@ -1,7 +1,3 @@
-import os
-import json
-from datetime import datetime
-from langchain.schema import BaseMessage 
 # ======================== #
 #  Bot User Class        #
 # ======================== #
@@ -23,50 +19,74 @@ from langchain.schema import BaseMessage
 #
 # This class ensures both are written to disk under a per-user JSON file inside `user_data/`.
 
+import os
+import json
+from datetime import datetime
+from langchain.schema import BaseMessage
+from firebase_db import db # This import is for Firebase Firestore database connection 
+
 USER_DATA_DIR = "user_data"
 os.makedirs(USER_DATA_DIR, exist_ok=True)
 
 class BotUser:
     def __init__(self, user_id):
-        """Initialize the BotUser with a user ID and load user data from disk."""
+        # """Initialize the BotUser with a user ID and load user data from disk."""
+        """Initialize the BotUser with a user ID and Firebase Firestore document reference."""
         self.user_id = str(user_id)
-        self.filepath = os.path.join(USER_DATA_DIR, f"{self.user_id}.json")
-        self.data = self._load_data()
+        self.doc_ref = db.collection("users").document(self.user_id)
+        # self.filepath = os.path.join(USER_DATA_DIR, f"{self.user_id}.json")
+        # self.data = self._load_data()
 
-    def _load_data(self):
-        """Load user data from a JSON file or create a new one if it doesn't exist."""
-        if os.path.exists(self.filepath):
-            with open(self.filepath, "r") as f:
-                return json.load(f)
-        else:
-            return {
-                "mode": None,       # Current user mode (e.g., "coach")
-                "memory": {},       # Dict of {mode: [message1, message2, ...]}
-                "history": []       # Flat list of all interactions
-            }
+    def _load_or_init_profile(self):
+        """Load or initialize the user profile in Firestore."""
+        doc = self.doc_ref.get()
+        if not doc.exists:
+            self.doc_ref.set({
+                "mode": None,
+                "created_at": datetime.utcnow().isoformat()
+            })
+        return self.doc_ref.get().to_dict()
+    
+    # def _load_data(self):
+    #     """Load user data from a JSON file or create a new one if it doesn't exist."""
+    #     if os.path.exists(self.filepath):
+    #         with open(self.filepath, "r") as f:
+    #             return json.load(f)
+    #     else:
+    #         return {
+    #             "mode": None,       # Current user mode (e.g., "coach")
+    #             "memory": {},       # Dict of {mode: [message1, message2, ...]}
+    #             "history": []       # Flat list of all interactions
+    #         }
 
-    def save(self):
-        """Persist user data (mode, memory, history) to a JSON file on disk."""
-        with open(self.filepath, "w") as f:
-            json.dump(self.data, f, indent=2)
+    # def save(self):
+    #     """Persist user data (mode, memory, history) to a JSON file on disk."""
+    #     with open(self.filepath, "w") as f:
+    #         json.dump(self.data, f, indent=2)
 
     @property
     def mode(self):
-        """Get the current mode of the user."""
-        return self.data.get("mode")
+        """Get the current mode of the user from the loaded profile in Firestore."""
+        profile = self._load_or_init_profile()
+        return profile.get("mode")
+        # """Get the current mode of the user."""
+        # return self.data.get("mode")
 
     @mode.setter
     def mode(self, value):
-        """Setter for user mode. Updates in-memory and on-disk."""
-        self.data["mode"] = value
-        self.save()
+        """Set the current mode of the user and update it in Firestore."""
+        self.doc_ref.update({
+            "mode": value,
+            "last_active": datetime.utcnow().isoformat()
+        })
 
     def get_memory(self):
-        """
-        Retrieve the user's conversational memory (used for LLM context).
-        Format: {mode: [BaseMessage, BaseMessage, ...]}
-        """
-        return self.data.get("memory", {})
+        """Retrieve the user's conversational memory from Firestore."""
+        mem_docs = self.doc_ref.collection("memory_snapshots").stream()
+        return {
+            doc.id: doc.to_dict().get("messages", [])
+            for doc in mem_docs
+        }
 
     def update_memory(self, mode, memory):
         """
@@ -74,21 +94,67 @@ class BotUser:
         Each message must be serialized so it's JSON-safe.
         """
         # Serialize messages to dicts
-        serializable_memory = {}
-        for m, messages in memory.items():
-            serializable_memory[m] = [
-                {"type": msg.type, "content": msg.content} if isinstance(msg, BaseMessage) else msg
-                for msg in messages
-            ]
-        self.data["memory"] = serializable_memory
-        self.save()
+        messages = [
+            {"type": msg.type, "content": msg.content} if isinstance(msg, BaseMessage) else msg
+            for msg in memory.get(mode, [])
+        ]
+        self.doc_ref.collection("memory_snapshots").document(mode).set({
+            "messages": messages,
+            "updated_at": datetime.utcnow().isoformat()
+        })
 
     def log_interaction(self, user_input, ai_reply, source="text"):
         """
-        Log a user interaction into the persistent history log.
+        Log a user interaction into the persistent history log in Firestore.
         Includes user and assistant messages, timestamp, and source (text/voice).
         """
-        timestamp = datetime.utcnow().isoformat()
-        self.data["history"].append({"role": "user", "content": user_input, "timestamp": timestamp, "source": source, "mode": self.mode})
-        self.data["history"].append({"role": "assistant", "content": ai_reply, "timestamp": timestamp, "source": "text", "mode": self.mode})
-        self.save()
+        # Create a new entry for the interaction
+        entry = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "mode": self.mode,
+            "source": source,
+            "entries": [
+                {"role": "user", "content": user_input},
+                {"role": "assistant", "content": ai_reply}
+            ]
+        }
+        self.doc_ref.collection("history_logs").add(entry)
+
+
+    # @mode.setter
+    # def mode(self, value):
+    #     """Setter for user mode. Updates in-memory and on-disk."""
+    #     self.data["mode"] = value
+    #     self.save()
+
+    # def get_memory(self):
+    #     """
+    #     Retrieve the user's conversational memory (used for LLM context).
+    #     Format: {mode: [BaseMessage, BaseMessage, ...]}
+    #     """
+    #     return self.data.get("memory", {})
+
+    # def update_memory(self, mode, memory):
+    #     """
+    #     Update and persist the memory used to construct prompts for the LLM.
+    #     Each message must be serialized so it's JSON-safe.
+    #     """
+    #     # Serialize messages to dicts
+    #     serializable_memory = {}
+    #     for m, messages in memory.items():
+    #         serializable_memory[m] = [
+    #             {"type": msg.type, "content": msg.content} if isinstance(msg, BaseMessage) else msg
+    #             for msg in messages
+    #         ]
+    #     self.data["memory"] = serializable_memory
+    #     self.save()
+
+    # def log_interaction(self, user_input, ai_reply, source="text"):
+    #     """
+    #     Log a user interaction into the persistent history log.
+    #     Includes user and assistant messages, timestamp, and source (text/voice).
+    #     """
+    #     timestamp = datetime.utcnow().isoformat()
+    #     self.data["history"].append({"role": "user", "content": user_input, "timestamp": timestamp, "source": source, "mode": self.mode})
+    #     self.data["history"].append({"role": "assistant", "content": ai_reply, "timestamp": timestamp, "source": "text", "mode": self.mode})
+    #     self.save()
