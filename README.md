@@ -158,6 +158,43 @@ Including both gives the bot:
 
 ---
 
+## 🧩 Firestore Data Model
+
+The bot uses Firebase Firestore to store per-user interaction data in a modular and scalable way. 
+This replaces earlier JSON-based storage and supports future analytics, evaluation, and performance tracking.
+
+### 🔍 Structure:
+```
+users/
+ └── {user_id} (Telegram Chat ID)
+      ├── mode: "coach"
+      ├── created_at: "2025-04-08T..."
+      └── Subcollections:
+          ├── memory_snapshots/
+          │    └── {mode}/
+          │         ├── messages: [ {type, content}, ... ]
+          │         └── updated_at: ...
+          └── history_logs/
+               └── {log_id}/
+                    ├── mode: "coach"
+                    ├── entries: [
+                          {"role": "human", "content": "..."},
+                          {"role": "ai", "content": "..."}
+                        ]
+                    └── timestamp: ...
+```
+
+### ✅ Design Highlights:
+- `memory_snapshots/`: Stores LLM prompt context (per mode). Used to generate context-aware responses.
+- `history_logs/`: Full logs of past interactions with timestamps, used for review, analytics, and long-term learning tracking.
+- Easily extendable to support:
+  - `evaluations/`: For feedback scores or rubric-based reviews
+  - `metrics/`: For tracking session activity, completion, engagement
+
+_This design supports real-time learning feedback and future feature expansions like dashboards or performance scoring._
+
+---
+
 ## 🔧 **Installation & Setup**  
 
 ### 1️⃣ Clone the Repository  
