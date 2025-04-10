@@ -32,3 +32,5 @@ if AI_PROVIDER == "gemini" and not GOOGLE_API_KEY:
 
 if not TELEGRAM_API_TOKEN:
     raise ValueError("⚠️ Missing TELEGRAM_API_TOKEN. The bot cannot run without it.")
+
+WHITELISTED_USER_IDS = os.getenv("WHITELISTED_USER_IDS", "").split(",")  # List of whitelisted user IDs (comma-separated)
