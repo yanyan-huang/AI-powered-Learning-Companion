@@ -134,3 +134,22 @@ class BotUser:
             "mode": self.mode,
             "timestamp": datetime.utcnow().isoformat()
         })
+
+
+    def get_llm_usage_count(self):
+        """
+        Retrieve the LLM usage count from Firestore.
+        Returns the count of LLM interactions for this user.
+        """
+        doc = self.doc_ref.collection("metrics").document("llm_usage").get()
+        return doc.to_dict().get("count", 0) if doc.exists else 0
+
+    def increment_llm_usage_count(self):
+        """
+        Increment the LLM usage count in Firestore.
+        This is used to track how many times the LLM has been used by this user.
+        """
+        usage_ref = self.doc_ref.collection("metrics").document("llm_usage")
+        doc = usage_ref.get()
+        current = doc.to_dict().get("count", 0) if doc.exists else 0
+        usage_ref.set({"count": current + 1})

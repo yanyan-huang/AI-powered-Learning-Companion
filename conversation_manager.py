@@ -1,5 +1,6 @@
 from langchain.schema import SystemMessage
-
+from prompts import MODE_PROMPTS
+from config import WHITELISTED_USER_IDS
 # ======================== #
 #  Conversation Manager    #
 # ======================== #
@@ -21,7 +22,6 @@ class ConversationManager:
         self.router = llm_router
 
     def switch_mode(self, new_mode):
-        from prompts import MODE_PROMPTS
         if new_mode in MODE_PROMPTS:
             self.user.mode = new_mode
             memory = self.user.get_memory()
@@ -32,6 +32,10 @@ class ConversationManager:
             return "⚠️ Invalid mode. Choose `/mode mentor`, `/mode coach`, or `/mode interviewer`."
 
     def process_input(self, user_input, source="text"):
+        if str(self.user.user_id) not in WHITELISTED_USER_IDS:
+            if self.user.get_llm_usage_count() >= 5:
+                return "🧪 You’ve used your 5 free AI responses. Stay tuned for early access!"
+            
         mode = self.user.mode
         memory = self.user.get_memory()
         ai_reply, updated_memory = self.router.get_response(self.user.user_id, user_input, mode, memory)
@@ -40,5 +44,7 @@ class ConversationManager:
 
         # ✅ Add this line to log a metric event
         self.user.log_metric_event()      
-          
+        
+        self.user.increment_llm_usage_count() # Increment usage count for LLM - ai response
+
         return ai_reply
