@@ -13,5 +13,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Now copy the rest of your app (won't bust pip cache)
 COPY . .
 
-# Run your Telegram bot
-CMD ["python3", "telegram_bot.py"]
+# Run your Telegram bot (unbuffered mode for logging with -u)
+CMD ["python3", "-u", "telegram_bot.py"] 

@@ -33,4 +33,11 @@ if AI_PROVIDER == "gemini" and not GOOGLE_API_KEY:
 if not TELEGRAM_API_TOKEN:
     raise ValueError("⚠️ Missing TELEGRAM_API_TOKEN. The bot cannot run without it.")
 
-WHITELISTED_USER_IDS = os.getenv("WHITELISTED_USER_IDS", "").split(",")  # List of whitelisted user IDs (comma-separated)
+# List of whitelisted user IDs (comma-separated)
+WHITELISTED_USER_IDS = os.getenv("WHITELISTED_USER_IDS", "").split(",")  
+
+# polling or webhook for Telegram bot  ：Set to True for webhook, False for polling
+# Webhook is more efficient, but requires a public URL; Polling is easier to set up, but less efficient
+USE_WEBHOOK = os.getenv("USE_WEBHOOK", "false").lower() == "true"
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+PORT = int(os.getenv("PORT", 8080))  # Default to 8080 (used by Cloud Run)

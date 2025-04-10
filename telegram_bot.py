@@ -2,6 +2,7 @@ from config import TELEGRAM_API_TOKEN  # Load Telegram API token from config
 from telegram.ext import Application, CommandHandler, MessageHandler, filters  # Telegram bot framework for handling commands and messages
 from handlers import text_message, change_mode, voice_message  # Import all handlers
 from handlers import start, help_command  # Import new start function
+from config import USE_WEBHOOK, WEBHOOK_URL, PORT  # Import webhook settings
 
 # ======================== #
 #  Initialize Telegram Bot #
@@ -33,5 +34,14 @@ application.add_handler(MessageHandler(filters.VOICE, voice_message))
 #  Start Telegram Bot     #
 # ======================= #
 
-# Run the bot using polling
-application.run_polling()
+if __name__ == "__main__":
+    if USE_WEBHOOK and WEBHOOK_URL:
+        print("🌐 PM Pal running with webhook mode")
+        application.run_webhook(
+            listen="0.0.0.0",
+            port=PORT,
+            webhook_url=WEBHOOK_URL
+        )
+    else:
+        print("🤖 PM Pal running in polling mode", flush=True)
+        application.run_polling()
