@@ -13,8 +13,13 @@ from firebase_admin import credentials, firestore, initialize_app
 
 load_dotenv()  # Loads vars from .env
 
-cred_path = os.getenv("FIREBASE_CRED_PATH", "firebase_creds.json")
-cred = credentials.Certificate(cred_path)
-initialize_app(cred)
+print("📦 Initializing Firebase connection...", flush=True)
 
-db = firestore.client()
+try:
+    cred_path = os.getenv("FIREBASE_CRED_PATH", "firebase_creds.json")
+    cred = credentials.Certificate(cred_path)
+    initialize_app(cred)
+
+    db = firestore.client()
+except Exception as e:
+    print("❌ Firebase init failed:", e, flush=True)

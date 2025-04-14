@@ -15,3 +15,6 @@ COPY . .
 
 # Run your Telegram bot (unbuffered mode for logging with -u)
 CMD ["python3", "-u", "telegram_bot.py"] 
+
+# Copy Firebase credentials file
+COPY firebase_creds.json /app/firebase_creds.json
