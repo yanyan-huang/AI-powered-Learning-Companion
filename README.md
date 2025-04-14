@@ -108,6 +108,7 @@ Below diagram illustrates how the PM Pal Telegram bot orchestrates input handlin
 |  Firestore Database     |
 |  memory_snapshots/      |
 |  history_logs/          |
+|  metrics/               |
 +-------------------------+
 
 
