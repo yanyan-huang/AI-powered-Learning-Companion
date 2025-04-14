@@ -12,3 +12,5 @@ __pycache__/
 # Ignore firebase credentials
 firebase_creds.json
 
+.env.yaml
+env.yaml
