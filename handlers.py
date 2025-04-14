@@ -198,8 +198,8 @@ async def voice_message(update: Update, context):
 
     # Display transcribed text and process it with AI
     await update.message.reply_text(
-        f"🎙️ *You:* _{transcript}_" 
-        # parse_mode=ParseMode.MARKDOWN
+        f"🎙️ *You:* _{transcript}_", 
+        parse_mode=ParseMode.MARKDOWN
         )
 
     # Generate AI response
