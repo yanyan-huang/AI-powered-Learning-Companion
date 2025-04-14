@@ -85,7 +85,7 @@ Below diagram illustrates how the PM Pal Telegram bot orchestrates input handlin
        v                        v
 +---------------+     +------------------+
 | CommandHandler|     | MessageHandler   |
-| (/start, /help)|    | (text / voice)   |
+| (/mode, /help)|    | (text / voice)   |
 +-------+-------+     +---------+--------+
         |                         |
         v                         v
