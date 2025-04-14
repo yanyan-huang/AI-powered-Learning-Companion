@@ -70,22 +70,22 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 Below diagram illustrates how the PM Pal Telegram bot orchestrates input handling, AI routing, memory management, and LLM response generation through a clean object-oriented architecture.
 
 ```
-                 +--------------------+
-                 |   Telegram User    |
-                 +---------+----------+
-                           |
-                           v
-            +------------------------------+
-            |       telegram_bot.py        |
-            |  (Bot App & Command Routing) |
-            +------+-----------------------+
-                   |
-       +-----------+------------+
-       |                        |
-       v                        v
++--------------------+
+|   Telegram User    |
++---------+----------+
+          |
+          v
++------------------------------+
+|       telegram_bot.py        |
+|  (Bot App & Command Routing) |
++------+-----------------------+
+       |
++------+------+
+|             |
+v             v
 +---------------+     +------------------+
 | CommandHandler|     | MessageHandler   |
-| (/start, /help)|    | (text / voice)   |
+| (/start/help) |     | (text/voice)     |
 +-------+-------+     +---------+--------+
         |                         |
         v                         v
@@ -93,23 +93,23 @@ Below diagram illustrates how the PM Pal Telegram bot orchestrates input handlin
 |   handlers.py   | <--> | ConversationManager |
 +-----------------+     +----------+----------+
                                    |
-       +---------------------------+--------------------------+
-       |                                                      |
-       v                                                      v
-+--------------+                                     +-----------------+
-|   BotUser    |                                     |   LLMRouter     |
-| (Tracks mode,|                                     | (LLM responses  |
-|  memory,     |                                     |  via OpenAI,    |
-|  history)    |                                     |  Claude, Gemini)|
-+--------------+                                     +-----------------+
-       |                                                      |
-       |                                              +------------------+
-       |                                              |    prompts.py    |
-       v                                              +------------------+
-+--------------------+                               | Mode-specific    |
-| user_data/*.json   | <-----------------------------+ system prompts   |
-| (memory + history) |
-+--------------------+
+      +----------------------------+----------------------------+
+      |                                                           |
+      v                                                           v
++--------------+                                        +-----------------+
+|   BotUser    |                                        |   LLMRouter     |
+| (Tracks mode,|                                        | (LLM responses  |
+|  memory,     |                                        |  via OpenAI,    |
+|  history)    |                                        |  Claude, Gemini)|
++--------------+                                        +-----------------+
+      |
+      v
++------------------------+
+|  Firestore Database    |
+|  - memory_snapshots/   |
+|  - history_logs/       |
++------------------------+
+
 ```
 
 ---
