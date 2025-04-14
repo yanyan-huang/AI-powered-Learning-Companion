@@ -258,10 +258,11 @@ The bot is live and can be accessed on Telegram:
 ### **Basic Commands**
 | Command | Description |
 |---------|------------|
+| `/start`       | Start the bot and reset your session                         |
 | `/help` | Show instructions on how to use the bot. |
-| `/mode mentor` | Switch to **Mentor Mode** (Personalized career guidance & learning paths). |
-| `/mode coach` | Switch to **Coach Mode** (Interactive PM concepts Q&A and guided case study). |
-| `/mode interviewer` | Switch to **Mock Interview Mode** (Real-time PM interview simulations). 
+| `/mentor` | Switch to **Mentor** Mode(Personalized career guidance & learning paths). |
+| `/coach` | Switch to **Coach Mode** Mode (Interactive PM concepts Q&A and guided case study). |
+| `/interviewer` | Switch to **Mock Interviewer** Mode(Real-time PM interview simulations). 
 
 ---
 
