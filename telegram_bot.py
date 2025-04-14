@@ -2,6 +2,7 @@ from config import TELEGRAM_API_TOKEN  # Load Telegram API token from config
 from telegram.ext import Application, CommandHandler, MessageHandler, filters  # Telegram bot framework for handling commands and messages
 from handlers import text_message, change_mode, voice_message  # Import all handlers
 from handlers import start, help_command  # Import new start function
+from handlers import mode_mentor, mode_coach, mode_interview  # Import specific mode handlers
 from config import USE_WEBHOOK, WEBHOOK_URL, PORT  # Import webhook settings
 
 ### DEBUGGING ###
@@ -30,6 +31,11 @@ application.add_handler(CommandHandler("start", start))
 
 # Command Handler: Handles the "/mode" command to switch AI learning modes
 application.add_handler(CommandHandler("mode", change_mode))
+
+# Command Handler: Handles the "/mentor", "/coach", and "/interview" commands to set the respective modes
+application.add_handler(CommandHandler("mentor", mode_mentor))  # Direct /mentor
+application.add_handler(CommandHandler("coach", mode_coach))    # Direct /coach
+application.add_handler(CommandHandler("interviewer", mode_interview))  # Direct /interview
 
 # Command Handler: Handles the "/help" command to provide guidance on using the bot
 application.add_handler(CommandHandler("help", help_command))

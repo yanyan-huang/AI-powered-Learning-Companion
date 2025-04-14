@@ -1,6 +1,7 @@
 
 from telegram.constants import ParseMode # Constants for text formatting in Telegram messages
 from telegram import Update # Handles updates (messages, commands) from Telegram users
+from telegram.ext import ContextTypes # Telegram bot framework for handling commands and messages
 from moviepy.editor import AudioFileClip  # Handles audio file processing (converting voice messages)
 from greetings import GREETINGS # Import greeting messages for different modes
 from openai import OpenAI  # For Whisper speech-to-text
@@ -37,9 +38,9 @@ async def ensure_mode_selected(update, user):
     if not user.mode:
         await update.message.reply_text(
             "🎯 **Ready to dive in? Choose a mode to tailor your learning experience today!**\n\n"
-            " **💡`/mode mentor`** for career advice & learning paths.\n"
-            " **📘`/mode coach`** to learn PM concepts & case studies interactively.\n"
-            " **🎤`/mode interviewer`** to practice PM interviews and get feedback.\n\n"
+            " - 💡 **/mentor** for career advice & learning paths.\n"
+            " - 📘 **/coach** to learn PM concepts & case studies interactively.\n"
+            " - 🎤 **/interviewer** to practice PM interviews and get feedback.\n\n"
             "Let me know how you'd like to begin!",
             parse_mode="Markdown"
         )
@@ -67,14 +68,15 @@ async def help_command(update: Update, context):
     Provides users with a quick overview of available commands and bot functionality.
     """
     await update.message.reply_text(
-        "**🤖 Need Help for your PM journey? Here's What You Can Do:**\n\n"
-        "- **💡 Type** `/mode mentor` for career guidance and learning paths.\n"
-        "- **📘 Type** `/mode coach` to learn PM concepts & case studies interactively.\n"
-        "- **🎤 Type** `/mode interviewer` for mock interviews with feedback.\n\n"
+        "*🤖 Need Help for your PM journey? Here's What You Can Do:*\n\n"
+        "- 💡 **/mentor** for career guidance and learning paths.\n"
+        "- 📘 **/coach** to learn PM concepts & case studies interactively.\n"
+        "- 🎤 **/interviewer** for mock interviews with feedback.\n\n"
         "**Other Commands:**\n"
         "- **/start** – Restart the bot and reset your session.\n"
         "- **/help** – Show this help message anytime.\n\n"
-        "Once you've selected a mode, just ask me anything, and I'll guide you!",
+        "Once you've selected a mode, just ask me anything, and I'll guide you!\n\n"
+        "📩 Having trouble or got feedback?\n Reach out anytime at huang.yva@gmail.com",
         parse_mode="Markdown"
     )
 
@@ -93,14 +95,14 @@ async def change_mode(update: Update, context):
 
     #  validate user input for mode change 
     if not context.args:
-        await update.message.reply_text("Please choose `/mode mentor`, `/mode coach`, or `/mode interviewer`.")
+        await update.message.reply_text("Please choose **/mentor**, **/coach**, or **interviewer**.")
         return
 
     mode_choice = context.args[0].lower()
     valid_modes = ["mentor", "coach", "interviewer"]
 
     if mode_choice not in valid_modes:
-        await update.message.reply_text("Please choose `/mode mentor`, `/mode coach`, or `/mode interviewer`.")
+        await update.message.reply_text("Please choose **/mentor**, **/coach**, or **/interviewer**.")
         return
 
     #  Switch mode and update user data
@@ -110,6 +112,26 @@ async def change_mode(update: Update, context):
         parse_mode=ParseMode.MARKDOWN
     )
 
+# -------------------------------
+# 💡 Direct command: /mentor
+# -------------------------------
+async def mode_mentor(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.args = ["mentor"]
+    await change_mode(update, context)
+
+# -------------------------------
+# 💡 Direct command: /coach
+# -------------------------------
+async def mode_coach(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.args = ["coach"]
+    await change_mode(update, context)
+
+# -------------------------------
+# 💡 Direct command: /interviewer
+# -------------------------------
+async def mode_interview(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.args = ["interviewer"]
+    await change_mode(update, context)
 
 # =============================== #
 #  Message Handling - Text Input  #
