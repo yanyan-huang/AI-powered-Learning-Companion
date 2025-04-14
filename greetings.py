@@ -1,8 +1,11 @@
 
 GREETINGS = {
     "mentor": (
-        "👋 Hi! I’m your AI Mentor. Whether you're an aspiring PM or switching careers, "
-        "I'm here to help you clarify your goals and craft a career path that aligns with your strengths and ambitions! 🚀\n"
+        "👋 Hi there! I’m your AI Mentor — here to help you break into Product Management or level up your PM career. 🚀\n\n"
+        "To start, please share:\n"
+        "📄 A quick background — your current role, experience, skills, or paste your resume\n"
+        "🎯 Your PM goals — the role, company, industry, or job description you’re aiming for\n\n"
+        "I’ll then walk you through a gap analysis and next steps. Ready when you are! ✨"
     ),
     "coach": (
         "👋 Hi there! I'm your Product Coach — ready to help you master PM fundamentals and build real product skills through hands-on case studies and active learning!\n\n"
