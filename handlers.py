@@ -155,8 +155,8 @@ async def text_message(update: Update, context):
     ai_response = manager.process_input(user_input)
 
     await update.message.reply_text(
-        f"🤖 *PM Pal:* {ai_response}"
-        # parse_mode=ParseMode.MARKDOWN
+        f"🤖 *PM Pal:* {ai_response}",
+        parse_mode=ParseMode.MARKDOWN
     )
 
 # =============================== #
@@ -207,6 +207,6 @@ async def voice_message(update: Update, context):
     manager = ConversationManager(user, router)
     ai_response = manager.process_input(transcript, source="voice")
     await update.message.reply_text(
-        f"🤖 *PM Pal:* {ai_response}" 
-        # parse_mode=ParseMode.MARKDOWN
+        f"🤖 *PM Pal:* {ai_response}",
+        parse_mode=ParseMode.MARKDOWN
         )
