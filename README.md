@@ -1,7 +1,7 @@
 # AI-Powered Learning Companion (for Tech Talents) 🎓 🚀
 
 ## 📌 Overview  
-This **AI-powered learning companion** provides **mentorship, tutoring, and mock interview coaching** for **aspiring and transitioning Product Managers**. It leverages AI to offer **structured learning paths, real-time feedback, and interactive interview practice** via **Telegram**.
+**PM Pal** is an **AI-powered learning companion** provides **mentorship, tutoring, and mock interview coaching** for **aspiring and transitioning Product Managers**. It leverages AI to offer **structured learning paths, real-time feedback, and interactive interview practice** via **Telegram**.
 
 ## 🎯 MVP Status:
 👉 **Mentor Mode** – AI recommends personalized gap analysis and structured learning paths tailored to individual goals.  
@@ -33,7 +33,7 @@ This **AI-powered learning companion** provides **mentorship, tutoring, and mock
 | **Voice Support**    | MoviePy, OpenAI Whisper API                                   | Converts `.ogg` → `.mp3`, transcribes to text using Whisper                 |
 | **Data Storage**     | Firebase Firestore                                   | Stores user mode, memory, full conversation history (user input & AI response); supports future analytics and performance feedback |
 | **Environment Config**| python-dotenv                                                 | Loads environment variables securely from `.env`                            |
-| **Deployment**       | Render.com (to be upgraded)                                   | Deploy as a background worker for continuous availability                   |
+| **Deployment**       | Docker, Google Cloud Run, gcloud CLI                          | Containerized deployment with webhook support, auto-scaling, and env-based config |
 
 
 ---
@@ -197,6 +197,93 @@ users/
   - `metrics/`: For tracking session activity, completion, engagement
 
 _This design supports real-time learning feedback and future feature expansions like dashboards or performance scoring._
+
+---
+---
+
+## 🚀 Deployment (Google Cloud Run)
+
+The Telegram bot is deployed using Docker and Google Cloud Run with webhook-based communication.
+
+### 🧱 Build & Deploy Steps:
+
+1. **Build the Docker image**
+```bash
+docker build --platform linux/amd64 -t pm-pal .
+```
+
+2. **Tag it for Google Cloud**
+```bash
+docker tag pm-pal gcr.io/your-project-id/pm-pal
+```
+
+3. **Push it to Google Container Registry**
+```bash
+docker push gcr.io/your-project-id/pm-pal
+```
+
+4. **Deploy to Cloud Run**
+```bash
+gcloud run deploy pm-pal \
+  --image gcr.io/your-project-id/pm-pal \
+  --platform managed \
+  --region us-west1 \
+  --allow-unauthenticated \
+  --env-vars-file .env.yaml
+```
+
+✅ Make sure Docker is running locally before starting this process.
+
+---
+
+## 🌐 Webhook Configuration
+
+The bot uses a webhook for receiving Telegram updates. Set it using the Telegram API:
+
+```bash
+curl -X POST "https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook" \
+  -d "url=https://your-service-url/<YOUR_BOT_TOKEN>"
+```
+
+Check your webhook status anytime with:
+```bash
+curl "https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getWebhookInfo"
+```
+
+---
+
+## ⚙️ .env.yaml (for Deployment)
+
+A sample `.env.yaml` file used for Cloud Run environment configuration:
+
+```yaml
+TELEGRAM_API_TOKEN: "your-telegram-token"
+USE_WEBHOOK: "true"
+WEBHOOK_URL: "https://your-service-url/YOUR_BOT_TOKEN"
+PORT: "8080"
+FIREBASE_CRED_PATH: "/app/firebase_creds.json"
+AI_PROVIDER: "openai"
+OPENAI_API_KEY: "your-openai-key"
+```
+
+---
+
+## 🐳 Docker Support
+
+This project is fully containerized.
+
+### 🧪 Run Locally with Docker:
+```bash
+docker build -t pm-pal .
+docker run -p 8080:8080 --env-file .env pm-pal
+```
+
+---
+
+## ✅ Project Status
+
+![Deployed on Cloud Run](https://img.shields.io/badge/deploy-Google%20Cloud%20Run-blue)
+
 
 ---
 
