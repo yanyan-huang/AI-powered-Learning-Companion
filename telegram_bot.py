@@ -50,30 +50,31 @@ application.add_handler(MessageHandler(filters.VOICE, voice_message))
 #  Start Telegram Bot     #
 # ======================= #
 
-import threading
-from flask import Flask
+# import threading
+# from flask import Flask
 
-flask_app = Flask(__name__)
+# flask_app = Flask(__name__)
 
-@flask_app.route("/")
-def health_check():
-    return "PM Pal is alive!", 200
+# @flask_app.route("/")
+# def health_check():
+#     return "PM Pal is alive!", 200
 
-def run_flask():
-    flask_app.run(host="0.0.0.0", port=PORT)
+# def run_flask():
+#     flask_app.run(host="0.0.0.0", port=PORT)
 
 if __name__ == "__main__":
     try:
         if USE_WEBHOOK and WEBHOOK_URL:
             print("🌐 PM Pal running in webhook mode", flush=True)
 
-            # Start Flask in a background thread
-            threading.Thread(target=run_flask).start()
+            # # Start Flask in a background thread
+            # threading.Thread(target=run_flask).start()
 
             # Start Telegram bot with webhook
             application.run_webhook(
                 listen="0.0.0.0",
                 port=PORT,
+                url_path=TELEGRAM_API_TOKEN,
                 webhook_url=WEBHOOK_URL
             )
         else:

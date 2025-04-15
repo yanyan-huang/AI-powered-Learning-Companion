@@ -23,3 +23,4 @@ try:
     db = firestore.client()
 except Exception as e:
     print("❌ Firebase init failed:", e, flush=True)
+    db = None # Still define db as None to avoid import error
