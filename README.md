@@ -1,8 +1,10 @@
 # AI-Powered Learning Companion (for Tech Talents) 🎓 🚀
 
-## 📌 Overview  
+## 📌 Overview
+
 **PM Pal** is an **AI-powered learning companion** provides **mentorship, tutoring, and mock interview coaching** for **aspiring and transitioning Product Managers**. It leverages AI to offer **structured learning paths, real-time feedback, and interactive interview practice**. Users interact with PM Pal through **Telegram** with natural language — both voice and text.
 
+---
 ## 💡 Key Technical Highlights
 
 - Deployed a production-grade Telegram bot using Docker & Google Cloud Run with webhook-based architecture
@@ -11,6 +13,7 @@
 - Scalable user memory and history management using Firebase Firestore
 - Secure configuration via `.env.yaml` for environment-specific deployment using `gcloud`
 - Designed for future extensibility: roles, web UI, RAG pipeline, and performance tracking
+---
 
 ## 💼 For Hiring Managers
 
@@ -21,7 +24,6 @@ This project demonstrates my ability to:
 - Build modular, maintainable backend logic in Python
 - Handle real-time communication via webhook APIs (Telegram)
 - Communicate technical systems clearly via documentation and diagrams
-  
 ---
 
 ## 🔧 Tech Stack
@@ -39,6 +41,7 @@ This project demonstrates my ability to:
 
  ---  
 ## 🎯 Core Features:
+
 👉 **Mentor Mode** – AI recommends personalized gap analysis and structured learning paths tailored to individual goals.  
 👉 **Coach Mode** – AI provides interactive Q&A and guided case study to enhance critical thinking and experiential learning.  
 👉 **Mock Interview Mode** – AI simulates different types of PM interviews and gives structured feedback for improvements.  
@@ -52,6 +55,7 @@ This project demonstrates my ability to:
 
 ---
 ## 📂 **Folder Structure**
+
 ```
 /Project_directory
 │
@@ -72,7 +76,6 @@ This project demonstrates my ability to:
 ├── .env                           # 🔐 (Optional) Environment variables file
 ```
 ---
----
 ## 🧠 Architecture Highlights
 
 - **ConversationManager** ties together `BotUser` (user state) and `LLMRouter` (LLM output).
@@ -81,6 +84,7 @@ This project demonstrates my ability to:
 - **BotUser** tracks mode, memory, and history per user.
 
 ### 📊 Architecture Diagram
+
 Below diagram illustrates how the PM Pal Telegram bot orchestrates input handling, AI routing, memory management, and LLM response generation through a clean object-oriented architecture.
 
 ```
