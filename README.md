@@ -1,24 +1,26 @@
 # AI-Powered Learning Companion (for Tech Talents) 🎓 🚀
 
 ## 📌 Overview  
-**PM Pal** is an **AI-powered learning companion** provides **mentorship, tutoring, and mock interview coaching** for **aspiring and transitioning Product Managers**. It leverages AI to offer **structured learning paths, real-time feedback, and interactive interview practice** via **Telegram**.
+**PM Pal** is an **AI-powered learning companion** provides **mentorship, tutoring, and mock interview coaching** for **aspiring and transitioning Product Managers**. It leverages AI to offer **structured learning paths, real-time feedback, and interactive interview practice**. Users interact with PM Pal through **Telegram** with natural language — both voice and text.
 
-## 🎯 MVP Status:
-👉 **Mentor Mode** – AI recommends personalized gap analysis and structured learning paths tailored to individual goals.  
-👉 **Coach Mode** – AI provides interactive Q&A and guided case study to enhance critical thinking and experiential learning.  
-👉 **Mock Interview Mode** – AI simulates different types of PM interviews and gives structured feedback for improvements.  
-👉 **Telegram Bot** – Users interact with the AI directly via Telegram, with text and voice support.  
-👉 **Flexible LLM routing**: Switchable LLM providers — OpenAI (primary), Claude, Gemini (via config)  
-👉 **Multimodal input**: Text and voice (speech-to-text via Whisper)  
-👉 **Session Logging** Logs user history (text & voice) by mode
-👉 **Database Integration (Now Using Firestore)** – Scalable, structured storage of user state, memory snapshots, and full conversation history for for structured user data, analytics, and future feedback loops.  
+## 💡 Key Technical Highlights
 
-## 🚀 Future Exploration
-🔜 **Cross-Role Expansion** – Grow PM Pal into Tech Pal to support other career tracks like UX Design, Data Science, and Software Engineering.  
-🔜 **Web Interface** – Make the bot accessible beyond Telegram through a browser-based UI (e.g., React + Flask).  
-🔜 **Smarter AI with File Uploads & RAG** – Move beyond copy-paste inputs by allowing users to upload resumes, job descriptions, or documents. Use Retrieval-Augmented Generation (RAG) to ground AI replies in real, personalized content.  
-🔜 **Data-Driven Feedback Engine** – Leverage Firestore logs to 1) evaluate AI response quality for product refinement, and 2) track user progress to deliver personalized feedback and learning insights.  
-🔜 **Dashboards & Insights** – Build visual dashboards to monitor usage trends, user engagement, and coaching effectiveness over time.
+- Deployed a production-grade Telegram bot using Docker & Google Cloud Run with webhook-based architecture
+- Architected a modular AI system supporting multiple LLM providers: OpenAI, Anthropic Claude, and Google Gemini
+- Integrated multimodal input via OpenAI Whisper (voice-to-text) and structured user state tracking
+- Scalable user memory and history management using Firebase Firestore
+- Secure configuration via `.env.yaml` for environment-specific deployment using `gcloud`
+- Designed for future extensibility: roles, web UI, RAG pipeline, and performance tracking
+
+## 💼 For Hiring Managers
+
+This project demonstrates my ability to:
+
+- Architect and deploy end-to-end AI systems in production
+- Work with LLM APIs (OpenAI, Claude, Gemini) and route intelligently
+- Build modular, maintainable backend logic in Python
+- Handle real-time communication via webhook APIs (Telegram)
+- Communicate technical systems clearly via documentation and diagrams
   
 ---
 
@@ -35,6 +37,18 @@
 | **Environment Config**| python-dotenv                                                 | Loads environment variables securely from `.env`                            |
 | **Deployment**       | Docker, Google Cloud Run, gcloud CLI                          | Containerized deployment with webhook support, auto-scaling, and env-based config |
 
+ ---  
+## 🎯 Core Features:
+👉 **Mentor Mode** – AI recommends personalized gap analysis and structured learning paths tailored to individual goals.  
+👉 **Coach Mode** – AI provides interactive Q&A and guided case study to enhance critical thinking and experiential learning.  
+👉 **Mock Interview Mode** – AI simulates different types of PM interviews and gives structured feedback for improvements.  
+👉 **Telegram Bot** – Users interact with the AI directly via Telegram, with text and voice support.  
+👉 **Flexible LLM routing**: Switchable LLM providers — OpenAI (primary), Claude, Gemin selected dynamically via config
+👉 **Multimodal input**: Text and voice (speech-to-text via Whisper)  
+- **Webhook-Based Bot** – cloud-scalable via Google Cloud Run
+👉 **Database Integration (Firestore)** – Scalable, structured storage of user state, memory snapshots, and full conversation history for for structured user data, analytics, and future feedback loops.
+👉 **Session Memory** – Short-term memory used in LLM prompting per mode
+👉 **History Logging** – Full archive of user sessions and LLM responses
 
 ---
 ## 📂 **Folder Structure**
@@ -57,7 +71,7 @@
 ├── requirements.txt               # 📦 (Optional) Dependencies
 ├── .env                           # 🔐 (Optional) Environment variables file
 ```
-
+---
 ---
 ## 🧠 Architecture Highlights
 
@@ -111,10 +125,8 @@ Below diagram illustrates how the PM Pal Telegram bot orchestrates input handlin
 |  metrics/               |
 +-------------------------+
 
-
 ```
 
----
 ## 🧠 How Memory vs. History Work
 
 To support high-quality, context-aware conversations and long-term user insights, the bot stores two types of conversational data: `memory` and `history`. Here's how they differ:
@@ -199,6 +211,14 @@ users/
 _This design supports real-time learning feedback and future feature expansions like dashboards or performance scoring._
 
 ---
+
+## 🚀 Future Work
+🔜 **Cross-Role Expansion** – Grow PM Pal into Tech Pal to support other career tracks like UX Design, Data Science, and Software Engineering.  
+🔜 **Web Interface** – Make the bot accessible beyond Telegram through a browser-based UI (e.g., React + Flask).  
+🔜 **Smarter AI with File Uploads & RAG** – Move beyond copy-paste inputs by allowing users to upload resumes, job descriptions, or documents. Use Retrieval-Augmented Generation (RAG) to ground AI replies in real, personalized content.  
+🔜 **Data-Driven Feedback Engine** – Leverage Firestore logs to 1) evaluate AI response quality for product refinement, and 2) track user progress to deliver personalized feedback and learning insights.  
+🔜 **Dashboards & Insights** – Build visual dashboards to monitor usage trends, user engagement, and coaching effectiveness over time.
+
 ---
 
 ## 🚀 Deployment (Google Cloud Run)
