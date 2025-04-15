@@ -33,8 +33,13 @@ class ConversationManager:
 
     def process_input(self, user_input, source="text"):
         if str(self.user.user_id) not in WHITELISTED_USER_IDS:
-            if self.user.get_llm_usage_count() >= 5:
-                return "🧪 You’ve used your 5 free AI responses. Stay tuned for early access!"
+            if self.user.get_llm_usage_count() >= 8:
+                return (
+                    "🧪 You’ve used your 8 free AI responses.\n\n"
+                    "Want more access or to help shape PM Pal? "
+                    "Contact us at huang.yva@gmail.com or DM @yvayvaine on Telegram.\n\n"
+                    "Thanks for trying the beta! 🚀"
+                )
             
         mode = self.user.mode
         memory = self.user.get_memory()

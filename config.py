@@ -36,7 +36,7 @@ if not TELEGRAM_API_TOKEN:
 # List of whitelisted user IDs (comma-separated)
 WHITELISTED_USER_IDS = os.getenv("WHITELISTED_USER_IDS", "").split(",")  
 
-# polling or webhook for Telegram bot  ：Set to True for webhook, False for polling
+# polling or webhook for Telegram bot：Set to True for webhook, False for polling
 # Webhook is more efficient, but requires a public URL; Polling is easier to set up, but less efficient
 USE_WEBHOOK = os.getenv("USE_WEBHOOK", "false").lower() == "true"
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
