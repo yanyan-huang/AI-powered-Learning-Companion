@@ -46,6 +46,9 @@ class LLMRouter:
 
     def _route_to_langchain(self, user_id, user_input, mode, memory):
         """Route the user input to OpenAI or Claude using LangChain."""
+        print("DEBUGGING in _route_to_langchain:", 
+              "\nuser_id: ", user_id, "\nuser_input: ", user_input, 
+              "\nmode: ", mode, "\nmemory: ", memory)
         llm = self.llms.get(self.provider)
         if not llm:
             return f"⚠️ Unsupported AI provider: {self.provider}", memory
@@ -57,7 +60,8 @@ class LLMRouter:
         try:
             response = llm(memory[mode])
             memory[mode].append(response)
-            return response.content, memory
+            print("DEBUGGING: 🧠 LLM Response Type:", type(response), "Content:", extract_content(response), "Memory:", len(memory))
+            return extract_content(response), memory
         except Exception as e:
             return f"❌ Error generating response: {str(e)}", memory
 
@@ -88,3 +92,28 @@ class LLMRouter:
         memory[mode].append(SystemMessage(content=ai_reply))
 
         return ai_reply, memory
+
+
+# ==================================================================
+# Safe content extractor helper: Extract LLM response content safely
+# ==================================================================
+def extract_content(response):
+    """ 
+    Ensures the bot can handle different LLM response formats gracefully.
+    Why this matters:
+    During inference, responses might come as:
+    - dicts (e.g., from Firestore or custom wrappers)
+    - LangChain Message objects with a `.content` attribute
+    - raw strings (fallbacks or mocked values)
+
+    This helper avoids runtime crashes like:
+        'dict' object has no attribute 'content'
+    It checks the format and returns usable content consistently.
+    """
+    if isinstance(response, dict):
+        return response.get("content", "")
+    elif hasattr(response, "content"):
+        return response.content
+    elif isinstance(response, str):
+        return response
+    return ""
