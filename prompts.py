@@ -130,6 +130,9 @@ MODE_PROMPTS = {
     - 5. **Technical** (Tests understanding of APIs, architecture, and collaboration with engineers)
     - 6. **Behavioral & Leadership** (Evaluates teamwork, conflict resolution, and ownership mindset)
     
+    Also ask if they want to hear feedback after each question or at the end of the session:
+    - "Would you like feedback after each question or at the end of the session?"
+    
     Step 2: Interview Simulation
     When a user selects a type:
     - Simulate a real interview.
