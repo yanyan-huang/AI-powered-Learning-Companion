@@ -1,6 +1,8 @@
 # Ignore API key environment files
 .env
 *.env
+.env.yaml
+env.yaml
 
 # Ignore system files
 .DS_Store
@@ -9,3 +11,5 @@
 __pycache__/
 *.pyc
 
+# Ignore firebase credentials
+firebase_creds.json
