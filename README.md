@@ -4,13 +4,6 @@
 
 **PM/Tech Pal** is an **AI-powered learning companion** provides **mentorship, tutoring, and mock interview coaching** for **aspiring and transitioning Product Managers/Tech Talents**. It leverages AI to offer **structured learning paths, real-time feedback, and interactive interview practice**. Users interact with PM Pal through **Telegram** with natural language — both voice and text. 
 
-## 🔗 Links & Resources
-
-- 👉 **[Poster Presentation](https://drive.google.com/file/d/1R8FVtfzBIu2Fj-XDLnpTuujxJLNe7wep/view)**
-- 👉 **[Demo Video](https://www.youtube.com/watch?v=xCDYWW3ehrQ)**
-- 👉 **[User Survey](https://docs.google.com/forms/d/e/1FAIpQLSdshCNP14lQ8kE6mEj4INzr4FwBEVya2mPXuH2S-T7I2C8BxA/viewform)**
-- 👉 **[Testing Recruitment](https://docs.google.com/forms/d/e/1FAIpQLScMFmMsfR-kw03PtNWb88PpL-af_Ngq1SWd1oE7RywZxD8ePw/viewform)**
-
 ---
 ## 💡 Key Technical Highlights
 
@@ -235,6 +228,15 @@ _This design supports real-time learning feedback and future feature expansions 
 🔜 **Smarter AI with File Uploads & RAG** – Move beyond copy-paste inputs by allowing users to upload resumes, job descriptions, or documents. Use Retrieval-Augmented Generation (RAG) to ground AI replies in real, personalized content.  
 🔜 **Data-Driven Feedback Engine** – Leverage Firestore logs to 1) evaluate AI response quality for product refinement, and 2) track user progress to deliver personalized feedback and learning insights.  
 🔜 **Dashboards & Insights** – Build visual dashboards to monitor usage trends, user engagement, and coaching effectiveness over time.
+
+---
+
+## 🔗 Links & Resources
+
+- 👉 **[Poster Presentation](https://drive.google.com/file/d/1R8FVtfzBIu2Fj-XDLnpTuujxJLNe7wep/view)**
+- 👉 **[Demo Video](https://www.youtube.com/watch?v=xCDYWW3ehrQ)**
+- 👉 **[User Survey](https://docs.google.com/forms/d/e/1FAIpQLSdshCNP14lQ8kE6mEj4INzr4FwBEVya2mPXuH2S-T7I2C8BxA/viewform)**
+- 👉 **[Testing Recruitment](https://docs.google.com/forms/d/e/1FAIpQLScMFmMsfR-kw03PtNWb88PpL-af_Ngq1SWd1oE7RywZxD8ePw/viewform)**
 
 ---
 
