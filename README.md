@@ -31,6 +31,12 @@ This project demonstrates my ability to:
 - Build modular, maintainable backend logic in Python
 - Handle real-time communication via webhook APIs (Telegram)
 - Communicate technical systems clearly via documentation and diagrams
+
+---
+## 📌 Project Poster
+
+![PM Pal Poster](assets/poster.png)
+
 ---
 
 ## 🔧 Tech Stack
@@ -53,12 +59,12 @@ This project demonstrates my ability to:
 👉 **Coach Mode** – AI provides interactive Q&A and guided case study to enhance critical thinking and experiential learning.  
 👉 **Mock Interview Mode** – AI simulates different types of PM interviews and gives structured feedback for improvements.  
 👉 **Telegram Bot** – Users interact with the AI directly via Telegram, with text and voice support.  
-👉 **Flexible LLM routing** – Switchable LLM providers: OpenAI (primary), Claude, Gemin selected dynamically via config.
-👉 **Multimodal input** – Text and voice (speech-to-text via Whisper).
-👉 **Webhook-Based Bot** – cloud-scalable via Google Cloud Run.
-👉 **Database Integration (Firestore)** – Scalable, structured storage of user state, memory snapshots, and full conversation history for for structured user data, analytics, and future feedback loops.
-👉 **Session Memory** – Short-term memory used in LLM prompting per mode.
-👉 **History Logging** – Full archive of user sessions and LLM responses.
+👉 **Flexible LLM routing** – Switchable LLM providers: OpenAI (primary), Claude, Gemin selected dynamically via config.  
+👉 **Multimodal input** – Text and voice (speech-to-text via Whisper).  
+👉 **Webhook-Based Bot** – cloud-scalable via Google Cloud Run.  
+👉 **Database Integration (Firestore)** – Scalable, structured storage of user state, memory snapshots, and full conversation history for for structured user data, analytics, and future feedback loops.  
+👉 **Session Memory** – Short-term memory used in LLM prompting per mode.  
+👉 **History Logging** – Full archive of user sessions and LLM responses.  
 
 ---
 ## 📂 **Folder Structure**
