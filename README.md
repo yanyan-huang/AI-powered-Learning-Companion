@@ -3,7 +3,10 @@
 ## 📌 Overview
 
 **PM/Tech Pal** is an **AI-powered learning companion** provides **mentorship, tutoring, and mock interview coaching** for **aspiring and transitioning Product Managers/Tech Talents**. It leverages AI to offer **structured learning paths, real-time feedback, and interactive interview practice**. Users interact with PM Pal through **Telegram** with natural language — both voice and text. 
+---
+## 📌 Project Poster
 
+![PM Pal Poster](assets/poster.png)
 ---
 ## 💡 Key Technical Highlights
 
@@ -24,11 +27,6 @@ This project demonstrates my ability to:
 - Build modular, maintainable backend logic in Python
 - Handle real-time communication via webhook APIs (Telegram)
 - Communicate technical systems clearly via documentation and diagrams
-
----
-## 📌 Project Poster
-
-![PM Pal Poster](assets/poster.png)
 
 ---
 
